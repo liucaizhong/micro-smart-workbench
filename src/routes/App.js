@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AsyncComponent from '../components/AsyncComponent'
 
 const AsyncCommission = AsyncComponent(
-  () => import('../components/Commission'),
+  () => import('../containers/CCommission'),
 )
 
 const App = () => (

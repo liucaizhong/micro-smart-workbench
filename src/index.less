@@ -35,8 +35,8 @@ body {
     }
   }
 
-  .list__province-fee {
-    .list__province-fee-header {
+  .list__part-fee {
+    .list__part-fee-header {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
@@ -60,33 +60,16 @@ body {
   }
 }
 
-.commission-modal {
-  width: 80% !important;
+.rc-table {
+  font-size: 0.34rem !important;
+  background: #fff;
 
-  .list__customer-fee {
-    .list__customer-fee-header {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
+  th, td {
+    padding: 0.16rem 0.28rem !important;
+  }
 
-      span {
-        flex: 1 0 33.3333%;
-        text-align: left;
-      }
-    }
-
-    .am-list-body:after {
-      content: none;
-    }
-    .am-list-content {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-
-      span {
-        flex: 1 0 33.3333%;
-        text-align: left;
-      }
-    }
+  .rc-table-thead {
+    font-size: 0.28rem;
+    color: #888;
   }
 }

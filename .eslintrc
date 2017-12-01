@@ -63,7 +63,7 @@
     ],
     "jsx-a11y/anchor-is-valid": [0],
     "jsx-a11y/href-no-hash": [0],
-    "arrow-parens": ["error", "as-needed"],
+    "arrow-parens": ["error", "always"],
     "import/no-mutable-exports": [0],
     "no-plusplus": [0],
     "react/no-array-index-key": [0],
