@@ -14,3 +14,8 @@ function makeActionCreator(type, ...argNames) {
 
 // set login user
 export const setLoginUser = makeActionCreator(TYPES.SET_LOGIN_USER, 'user')
+// set search cond for commission
+export const setCommissionCond = makeActionCreator(
+  TYPES.SET_COMMISSION_COND,
+  'commissionCond',
+)

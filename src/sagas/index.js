@@ -5,11 +5,11 @@ import { getCookie } from '../util'
 
 // get login info
 function* setUser() {
-  const userId = getCookie('userId') || 'sunjx'
-  const userName = getCookie('userName') || '孙金霞'
+  const userId = getCookie('userId') || 'zhuxiaoyan'
+  const userName = getCookie('userName') || '朱晓燕'
   // 0: admin, 1: analyst, 2: sales
-  const roleId = getCookie('roleId') || 1
-  const groupId = getCookie('groupId') || 'zhanlue'
+  const roleId = getCookie('roleId') || 0
+  const groupId = getCookie('groupId') || '1005'
 
   yield put({
     type: TYPES.SET_LOGIN_USER,

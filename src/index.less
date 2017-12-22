@@ -2,9 +2,17 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+
+  * {
+    box-sizing: border-box;
+  }
 }
 
 .commission-div {
+  position: relative;
+  height: 100%;
+  padding-bottom: 0.95rem;
+
   .list__select-person {
     .am-list-header {
       font-size: 0.32rem;
@@ -58,6 +66,119 @@ body {
       }
     }
   }
+
+  .am-button {
+    border-radius: 0;
+  }
+
+  .toolbar {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+
+    .admin-btn {
+      color: #888;
+      font-size: .32rem;
+    }
+  }
+
+  .ranking-card {
+    .am-card-body {
+      div {
+        text-align: center;
+        font-size: 1.5rem;
+        padding: 0.5rem 0;
+      }
+    }
+  }
+}
+
+.upd-commission-file {
+  height: 100%;
+
+  .am-list-header {
+    font-size: .32rem;
+
+    .header-bar {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+
+      .trans-btn {
+        font-size: 0.26rem;
+        height: 100%;
+        line-height: 1;
+        padding: 0.1rem 0.1rem;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .file-upd-item {
+    .am-list-extra {
+      position: relative;
+      box-sizing: border-box;
+      padding-top: 0.14rem;
+      padding-bottom: 0.14rem;
+      height: 100%;
+
+      .file-upd-btn {
+        position: absolute;
+        top: 0;
+        cursor: pointer;
+        right: 0;
+        color: #bfbfbf;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        line-height: 2;
+
+        input {
+          position: absolute;
+          font-size: .4rem;
+          line-height: 2.2;
+          right: 0;
+          top: 0;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        span {
+          display: block;
+          color: #888;
+          box-sizing: border-box;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding-top: 0.14rem;
+          padding-bottom: 0.14rem;
+          padding-right: 0.1rem;
+        }
+      }
+    }
+  }
+
+  .btn-group {
+    position: fixed;
+    box-sizing: border-box;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: .2rem;
+
+    a {
+      font-size: .32rem;
+      margin-bottom: .2rem;
+    }
+  }
 }
 
 .rc-table {
@@ -71,5 +192,22 @@ body {
   .rc-table-thead {
     font-size: 0.28rem;
     color: #888;
+  }
+}
+
+.route-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  > div {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.point-detail {
+  .table-header {
+    font-style: italic;
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { List, Picker, Toast } from 'antd-mobile'
+// import { Link } from 'react-router-dom'
+import { List, Picker, Toast, Button, Card } from 'antd-mobile'
 import { injectIntl, intlShape } from 'react-intl'
 import moment from 'moment'
 import Table from 'rc-table'
@@ -15,71 +16,59 @@ class Commission extends Component {
 
     this.loginUser = props.loginUser
     this.year = moment().year()
+    this.preYear = this.year - 1
     this.month = moment().month() + 1
     this.quarter = moment().quarter()
+    const { pickedUser, pickedDate, pageId } = props.commissionCond
 
-    const pageId = props.loginUser.roleId || 1
+    const newPageId = pageId || props.loginUser.roleId || 1
 
     this.state = {
-      pickedUser: [props.loginUser.groupId, props.loginUser.userId],
-      pageId,
-      pickedDate: pageId === 1 ? [this.quarter] : [this.month],
-      // userList: [],
-      userList: [{
-        groupName: '战略',
-        groupId: 'zhanlue',
-        roleId: 1,
-        members: [{
-          userId: 'sunjx',
-          userName: '孙金霞',
-        }, {
-          userId: 'xuej',
-          userName: '薛俊',
-        }],
-      }, {
-        groupName: '其他',
-        groupId: 'qita',
-        roleId: 0,
-        members: [{
-          userId: 'zhuxy',
-          userName: '朱晓燕',
-        }],
-      }, {
-        groupName: '上海销售',
-        groupId: 'xiaoshou0',
-        roleId: 2,
-        members: [{
-          userId: 'wumy',
-          userName: '吴鸣远',
-        }, {
-          userId: 'cheny',
-          userName: '程瑶',
-        }],
-      }],
+      pickedUser: (pickedUser.length && pickedUser)
+        || [props.loginUser.groupId, props.loginUser.userId],
+      pageId: newPageId,
+      pickedDate: (pickedDate.length && pickedDate) || (newPageId === 1
+                  ? [this.year, this.quarter]
+                  : [this.year, this.month]),
+      userList: [],
+      // userList: [{
+      //   groupName: '战略',
+      //   groupId: '1005',
+      //   roleId: 1,
+      //   members: [{
+      //     userId: 'sunjinxia',
+      //     userName: '孙金霞',
+      //   }, {
+      //     userId: 'xuej',
+      //     userName: '薛俊',
+      //   }],
+      // }, {
+      //   groupName: '其他',
+      //   groupId: 'qita',
+      //   roleId: 0,
+      //   members: [{
+      //     userId: 'zhuxy',
+      //     userName: '朱晓燕',
+      //   }],
+      // }, {
+      //   groupName: '上海销售',
+      //   groupId: 'xiaoshou0',
+      //   roleId: 2,
+      //   members: [{
+      //     userId: 'wumy',
+      //     userName: '吴鸣远',
+      //   }, {
+      //     userId: 'cheny',
+      //     userName: '程瑶',
+      //   }],
+      // }],
+      ranking: 0,
       fee: [{
         total: '100000',
         used: '50000',
         unused: '50000',
       }],
-      points: [{
-        category: '上海',
-        point: '50',
-      }, {
-        category: '广深',
-        point: '30',
-      }, {
-        category: '北京',
-        point: '30',
-      }, {
-        category: '经纪业务VIP',
-        point: '50',
-      }, {
-        category: '自营资管',
-        point: '30',
-      }, {
-        category: '其他',
-        point: '30',
-      }],
+      points: [],
       commissions: [{
         category: '交银施罗德',
         commission: '2,921,235.34',
@@ -90,10 +79,113 @@ class Commission extends Component {
     }
   }
 
+  componentDidMount() {
+    const { pickedUser, pickedDate, pageId } = this.state
+    const { setCommissionCond, intl } = this.props
+
+    setCommissionCond({
+      pickedUser,
+      pickedDate,
+      pageId,
+    })
+
+    const urlGetUserList = process.env.NODE_ENV === 'production'
+                ? './API/userList.php'
+                : 'http://localhost:3000/getUserList'
+
+    fetch(`${urlGetUserList}?userId=${this.loginUser.userId}`, {
+      method: 'GET',
+    })
+    .then((resp) => {
+      // console.log('resp', resp)
+      return resp.json()
+    })
+    .then((data) => {
+      // console.log('data', data)
+      this.setState({
+        userList: data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+    if (pageId === 1) {
+      const urlGetPoints = process.env.NODE_ENV === 'production'
+                  ? './API/getPaidian.php'
+                  : 'http://localhost:3000/getPoints'
+
+      fetch(`${urlGetPoints}?userId=${pickedUser[1]}&year=${pickedDate[0]}&quarter=${pickedDate[1]}`, {
+        method: 'GET',
+      })
+      .then((resp) => {
+        // console.log('resp', resp)
+        return resp.json()
+      })
+      .then((data) => {
+        // console.log('data', data)
+        this.setState({
+          points: data.detail,
+          ranking: data.rank || intl.formatMessage({
+            id: 'Commission.ranking0',
+          }),
+        })
+        Toast.hide()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    } else {
+      // for commission
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { intl, commissionCond: { pickedUser, pickedDate } } = nextProps
+    const { pageId } = this.state
+    Toast.loading(intl.formatMessage({
+      id: 'Common.loading',
+    }), 0)
+
+    if (pageId === 1) {
+      const urlGetPoints = process.env.NODE_ENV === 'production'
+                  ? './API/getPaidian.php'
+                  : 'http://localhost:3000/getPoints'
+
+      fetch(`${urlGetPoints}?userId=${pickedUser[1]}&year=${pickedDate[0]}&quarter=${pickedDate[1]}`, {
+        method: 'GET',
+      })
+      .then((resp) => {
+        // console.log('resp', resp)
+        return resp.json()
+      })
+      .then((data) => {
+        // console.log('data', data)
+        this.setState({
+          points: data.detail,
+          ranking: data.rank || intl.formatMessage({
+            id: 'Commission.ranking0',
+          }),
+        })
+        Toast.hide()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    } else {
+      // for commission
+    }
+  }
+
+  onAdminBtn = () => {
+    const { history } = this.props
+    history.push('/upd-commission')
+  }
+
   render() {
-    const { intl } = this.props
+    const { intl, history, setCommissionCond } = this.props
     const { fee, points, userList, pickedDate,
-      pickedUser, pageId, commissions,
+      pickedUser, pageId, commissions, ranking,
     } = this.state
 
     const renderListHeader = () => {
@@ -118,24 +210,48 @@ class Commission extends Component {
     })
 
     const onUserPicked = (v) => {
-      Toast.loading(intl.formatMessage({
-        id: 'Common.loading',
-      }), 0)
-
       const newPageId = userList.find((user) => {
         return user.groupId === v[0]
       }).roleId || 1
 
-      this.setState({
-        pickedDate: newPageId === 1 ? [this.quarter] : [this.month],
-        pickedUser: v,
-        pageId: newPageId,
-      })
-
-      Toast.hide()
+      let newPickedDate = []
+      if (pageId !== newPageId) {
+        newPickedDate = newPageId === 1
+                    ? [this.year, this.quarter]
+                    : [this.year, this.month]
+        this.setState({
+          pickedDate: newPickedDate,
+          pickedUser: v,
+          pageId: newPageId,
+        }, setCommissionCond({
+          pickedDate: newPickedDate,
+          pickedUser: v,
+          pageId: newPageId,
+        }))
+      } else {
+        newPickedDate = pickedDate
+        this.setState({
+          pickedUser: v,
+        }, setCommissionCond({
+          pickedUser: v,
+        }))
+      }
     }
 
-    const datePickerData = pageId === 1 ? [1, 2, 3, 4].map((q) => {
+    const datePickerData = pageId === 1 ? [[
+      {
+        label: `${this.preYear}${intl.formatMessage({
+          id: 'Common.year',
+        })}`,
+        value: this.preYear,
+      },
+      {
+        label: `${this.year}${intl.formatMessage({
+          id: 'Common.year',
+        })}`,
+        value: this.year,
+      },
+    ], [1, 2, 3, 4].map((q) => {
       return {
         label: intl.formatMessage({
           id: 'Common.quarter',
@@ -144,7 +260,20 @@ class Commission extends Component {
         }),
         value: q,
       }
-    }) : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
+    })] : [[
+      {
+        label: `${this.preYear}${intl.formatMessage({
+          id: 'Common.year',
+        })}`,
+        value: this.preYear,
+      },
+      {
+        label: `${this.year}${intl.formatMessage({
+          id: 'Common.year',
+        })}`,
+        value: this.year,
+      },
+    ], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
       return {
         label: intl.formatMessage({
           id: 'Common.month',
@@ -153,18 +282,14 @@ class Commission extends Component {
         }),
         value: m,
       }
-    })
+    })]
 
     const onDatePicked = (v) => {
-      Toast.loading(intl.formatMessage({
-        id: 'Common.loading',
-      }), 0)
-
       this.setState({
         pickedDate: v,
-      })
-
-      Toast.hide()
+      }, setCommissionCond({
+        pickedDate: v,
+      }))
     }
 
     const columnsTable0 = [{
@@ -237,6 +362,18 @@ class Commission extends Component {
         ...row,
         key: i,
       }
+    })
+
+    const onTable1Row = (record) => ({
+      onClick() {
+        setCommissionCond({
+          category: record.category,
+        })
+        history.push('/points-detail')
+        // history.push(`/points-detail?q=${JSON.stringify({
+        //   category: encodeURI(record.category),
+        // })}`)
+      },
     })
 
     const columnsTable2 = [{
@@ -316,13 +453,13 @@ class Commission extends Component {
             extra={intl.formatMessage({
               id: 'Common.pick',
             })}
+            cascade={false}
             value={pickedDate}
             format={(v) => {
-              return `${this.year}${intl.formatMessage({
-                id: 'Common.year',
-              })}${v[0]}`
+              // console.log('v', v)
+              return v.join('')
             }}
-            cols={1}
+            cols={2}
             onChange={(v) => {
               onDatePicked(v)
             }}
@@ -344,18 +481,51 @@ class Commission extends Component {
           data={dataTable0}
         />
 
+        <Card full className="ranking-card">
+          <Card.Header
+            title={intl.formatMessage({
+              id: 'Commission.ranking',
+            })}
+          />
+          <Card.Body>
+            <div>{ranking}</div>
+          </Card.Body>
+        </Card>
+
         {
           pageId === 1
           ? <Table
             id="table1"
             columns={columnsTable1}
             data={dataTable1}
+            onRow={onTable1Row}
           />
           : <Table
             id="table2"
             columns={columnsTable2}
             data={dataTable2}
           />
+        }
+
+        {
+          this.loginUser.roleId === 0 ?
+            <div className="toolbar">
+              <Button
+                className="admin-btn"
+                icon={
+                  <Icon
+                    type={require('../assets/icons/list.svg')}
+                    size="xxs"
+                  />
+                }
+                onClick={this.onAdminBtn}
+              >
+                {intl.formatMessage({
+                  id: 'Common.admin',
+                })}
+              </Button>
+            </div>
+          : null
         }
       </div>
     )
@@ -364,7 +534,10 @@ class Commission extends Component {
 
 Commission.propTypes = {
   intl: intlShape.isRequired,
+  history: PropTypes.object.isRequired,
   loginUser: PropTypes.object.isRequired,
+  commissionCond: PropTypes.object.isRequired,
+  setCommissionCond: PropTypes.func.isRequired,
 }
 
 export default injectIntl(Commission)
