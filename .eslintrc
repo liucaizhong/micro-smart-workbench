@@ -34,6 +34,7 @@
     "react/jsx-no-bind": [0],
     "react/prefer-stateless-function": [0],
     "react/prop-types": [0],
+    "react/no-did-mount-set-state": [0],
     "require-yield": [1],
     "linebreak-style": ["error", "windows"],
     "indent": 2,

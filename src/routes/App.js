@@ -1,6 +1,6 @@
 // configure router
 import React from 'react'
-import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 // import { spring, AnimatedSwitch } from 'react-router-transition'
 import AsyncComponent from '../components/AsyncComponent'
 
@@ -8,10 +8,13 @@ const AsyncCommission = AsyncComponent(
   () => import('../containers/CCommission'),
 )
 const AsyncAdminCommission = AsyncComponent(
-  () => import('../components/AdminCommission'),
+  () => import('../containers/CAdminCommission'),
 )
 const AsyncPointsDetail = AsyncComponent(
   () => import('../containers/CPointsDetail'),
+)
+const AsyncAnnualReview = AsyncComponent(
+  () => import('../containers/CAnnualReview'),
 )
 
 // const mapStyles = (styles) => {
@@ -58,9 +61,17 @@ const App = () => (
         mapStyles={mapStyles}
         className="route-wrapper"
       > */}
-      <Route exact path="/" component={AsyncCommission} />
+      <Route
+        exact
+        path="/"
+        render={() => (
+          <Redirect to="/annual-review" />
+        )}
+      />
+      <Route path="/commission" component={AsyncCommission} />
       <Route path="/upd-commission" component={AsyncAdminCommission} />
       <Route path="/points-detail" component={AsyncPointsDetail} />
+      <Route path="/annual-review" component={AsyncAnnualReview} />
       {/* </AnimatedSwitch> */}
     </Switch>
   </Router>

@@ -3,6 +3,8 @@ import { render } from 'react-dom'
 import { LocaleProvider } from 'antd-mobile'
 import { addLocaleData, IntlProvider } from 'react-intl'
 import { Provider } from 'react-redux'
+import 'intl'
+import 'intl/locale-data/jsonp/en.js'
 import configureStore from './configureStore'
 import configureAppLocale from './configureAppLocale'
 import App from './routes/App'
@@ -39,7 +41,6 @@ const store = configureStore()
 //     </LocaleProvider>
 //   ), rootElement)
 // }
-
 render(
   <LocaleProvider locale={appLocale.antd}>
     <IntlProvider locale={appLocale.locale} messages={appLocale.messages}>

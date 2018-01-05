@@ -15,6 +15,8 @@ const urlMap = {
   '/getUserList': `${orientUrl}/Revenue/API/userList.php`,
   '/getPoints': `${orientUrl}/Revenue/API/getPaidian.php`,
   '/getPointDetail': `${orientUrl}/Revenue/API/getPaidianDetail.php`,
+  '/exportPoints': `${orientUrl}/Revenue/API/exportPaidian.php`,
+  '/getAnnualSummary': `${orientUrl}/Summary/API/getSummary.php`,
 }
 
 function mapUrl(rawUrl) {
@@ -161,6 +163,22 @@ module.exports = () => {
   // get point detail
   router.get('/getPointDetail', (req, res) => {
     console.log('getPointDetail start!')
+    const urlObj = url.parse(req.url)
+    urlObj.pathname = mapUrl(urlObj.pathname)
+    const realUrl = url.format(urlObj)
+    requestGet(realUrl, req, res)
+  })
+  // get export points file
+  router.get('/exportPoints', (req, res) => {
+    console.log('exportPoints start!')
+    const urlObj = url.parse(req.url)
+    urlObj.pathname = mapUrl(urlObj.pathname)
+    const realUrl = url.format(urlObj)
+    requestGet(realUrl, req, res)
+  })
+  // get annual summary
+  router.get('/getAnnualSummary', (req, res) => {
+    console.log('getAnnualSummary start!')
     const urlObj = url.parse(req.url)
     urlObj.pathname = mapUrl(urlObj.pathname)
     const realUrl = url.format(urlObj)

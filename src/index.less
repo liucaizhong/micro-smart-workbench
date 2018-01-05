@@ -211,3 +211,41 @@ body {
     font-style: italic;
   }
 }
+
+.annual-review__card-list {
+  padding: .3rem;
+
+  .annual-review__card {
+    margin-bottom: .3rem;
+
+    &.am-card:not(.am-card-full) {
+      border: 0;
+      border-radius: 0;
+    }
+
+    .am-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .am-card-header-content {
+        font-size: .34rem;
+        font-weight: 500;
+        line-height: 1.5;
+      }
+
+      .am-card-header-extra {
+        font-size: .26rem;
+      }
+    }
+
+    .am-card-body {
+      border-top: 0;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

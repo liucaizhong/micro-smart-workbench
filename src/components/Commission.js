@@ -19,69 +19,47 @@ class Commission extends Component {
     this.preYear = this.year - 1
     this.month = moment().month() + 1
     this.quarter = moment().quarter()
-    const { pickedUser, pickedDate, pageId } = props.commissionCond
 
-    const newPageId = pageId || props.loginUser.roleId || 1
+    const { pickedUser, pickedDate, pageId } = props.commissionCond
+    const newPageId = +pageId || +props.loginUser.roleId || 1
+
+    // set default year, month, quarter
+    this.defaultQuarter = this.quarter - 1 || 4
+    this.defaultYear0 = this.quarter - 1 ? this.year : this.preYear
+    this.defaultMonth = this.month - 1 || 12
+    this.defaultYear1 = this.month - 1 ? this.year : this.preYear
 
     this.state = {
       pickedUser: (pickedUser.length && pickedUser)
         || [props.loginUser.groupId, props.loginUser.userId],
       pageId: newPageId,
       pickedDate: (pickedDate.length && pickedDate) || (newPageId === 1
-                  ? [this.year, this.quarter]
-                  : [this.year, this.month]),
+                  ? [this.defaultYear0, this.defaultQuarter]
+                  : [this.defaultYear1, this.defaultMonth]),
       userList: [],
-      // userList: [{
-      //   groupName: '战略',
-      //   groupId: '1005',
-      //   roleId: 1,
-      //   members: [{
-      //     userId: 'sunjinxia',
-      //     userName: '孙金霞',
-      //   }, {
-      //     userId: 'xuej',
-      //     userName: '薛俊',
-      //   }],
-      // }, {
-      //   groupName: '其他',
-      //   groupId: 'qita',
-      //   roleId: 0,
-      //   members: [{
-      //     userId: 'zhuxy',
-      //     userName: '朱晓燕',
-      //   }],
-      // }, {
-      //   groupName: '上海销售',
-      //   groupId: 'xiaoshou0',
-      //   roleId: 2,
-      //   members: [{
-      //     userId: 'wumy',
-      //     userName: '吴鸣远',
-      //   }, {
-      //     userId: 'cheny',
-      //     userName: '程瑶',
-      //   }],
-      // }],
       ranking: 0,
-      fee: [{
-        total: '100000',
-        used: '50000',
-        unused: '50000',
-      }],
+      // fee: [{
+      //   total: '100000',
+      //   used: '50000',
+      //   unused: '50000',
+      // }],
+      total: 0,
+      fee: [],
       points: [],
-      commissions: [{
-        category: '交银施罗德',
-        commission: '2,921,235.34',
-      }, {
-        category: '华安',
-        commission: '5,021,022.01',
-      }],
+      // commissions: [{
+      //   category: '交银施罗德',
+      //   commission: '2,921,235.34',
+      // }, {
+      //   category: '华安',
+      //   commission: '5,021,022.01',
+      // }],
+      commissions: [],
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { pickedUser, pickedDate, pageId } = this.state
-    const { setCommissionCond, intl } = this.props
+    const { setCommissionCond } = this.props
 
     setCommissionCond({
       pickedUser,
@@ -93,61 +71,23 @@ class Commission extends Component {
                 ? './API/userList.php'
                 : 'http://localhost:3000/getUserList'
 
-    fetch(`${urlGetUserList}?userId=${this.loginUser.userId}`, {
+    const resp = await fetch(`${urlGetUserList}?userId=${this.loginUser.userId}`, {
       method: 'GET',
     })
-    .then((resp) => {
-      // console.log('resp', resp)
-      return resp.json()
+    const data = await resp.json()
+    this.setState({
+      userList: data,
     })
-    .then((data) => {
-      // console.log('data', data)
-      this.setState({
-        userList: data,
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-
-    if (pageId === 1) {
-      const urlGetPoints = process.env.NODE_ENV === 'production'
-                  ? './API/getPaidian.php'
-                  : 'http://localhost:3000/getPoints'
-
-      fetch(`${urlGetPoints}?userId=${pickedUser[1]}&year=${pickedDate[0]}&quarter=${pickedDate[1]}`, {
-        method: 'GET',
-      })
-      .then((resp) => {
-        // console.log('resp', resp)
-        return resp.json()
-      })
-      .then((data) => {
-        // console.log('data', data)
-        this.setState({
-          points: data.detail,
-          ranking: data.rank || intl.formatMessage({
-            id: 'Commission.ranking0',
-          }),
-        })
-        Toast.hide()
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    } else {
-      // for commission
-    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { intl, commissionCond: { pickedUser, pickedDate } } = nextProps
-    const { pageId } = this.state
-    Toast.loading(intl.formatMessage({
-      id: 'Common.loading',
-    }), 0)
+    // console.log('receive next props')
+    const { intl, commissionCond: { pickedUser, pickedDate, pageId } } = nextProps
 
     if (pageId === 1) {
+      Toast.loading(intl.formatMessage({
+        id: 'Common.loading',
+      }), 0)
       const urlGetPoints = process.env.NODE_ENV === 'production'
                   ? './API/getPaidian.php'
                   : 'http://localhost:3000/getPoints'
@@ -161,8 +101,13 @@ class Commission extends Component {
       })
       .then((data) => {
         // console.log('data', data)
+        const total = data.detail && data.detail.reduce((t, p) => {
+          return t + (isNaN(+p.point) ? 0 : +p.point)
+        }, 0)
+
         this.setState({
           points: data.detail,
+          total: Math.round(total * 100) / 100,
           ranking: data.rank || intl.formatMessage({
             id: 'Commission.ranking0',
           }),
@@ -174,6 +119,10 @@ class Commission extends Component {
       })
     } else {
       // for commission
+      // Toast.loading(intl.formatMessage({
+      //   id: 'Common.loading',
+      // }), 0)
+      Toast.hide()
     }
   }
 
@@ -185,7 +134,7 @@ class Commission extends Component {
   render() {
     const { intl, history, setCommissionCond } = this.props
     const { fee, points, userList, pickedDate,
-      pickedUser, pageId, commissions, ranking,
+      pickedUser, pageId, commissions, ranking, total,
     } = this.state
 
     const renderListHeader = () => {
@@ -210,15 +159,15 @@ class Commission extends Component {
     })
 
     const onUserPicked = (v) => {
-      const newPageId = userList.find((user) => {
+      const newPageId = +userList.find((user) => {
         return user.groupId === v[0]
       }).roleId || 1
 
       let newPickedDate = []
       if (pageId !== newPageId) {
         newPickedDate = newPageId === 1
-                    ? [this.year, this.quarter]
-                    : [this.year, this.month]
+          ? [this.defaultYear0, this.defaultQuarter]
+          : [this.defaultYear1, this.defaultMonth]
         this.setState({
           pickedDate: newPickedDate,
           pickedUser: v,
@@ -453,13 +402,13 @@ class Commission extends Component {
             extra={intl.formatMessage({
               id: 'Common.pick',
             })}
-            cascade={false}
             value={pickedDate}
             format={(v) => {
               // console.log('v', v)
               return v.join('')
             }}
             cols={2}
+            cascade={false}
             onChange={(v) => {
               onDatePicked(v)
             }}
@@ -481,16 +430,25 @@ class Commission extends Component {
           data={dataTable0}
         />
 
-        <Card full className="ranking-card">
-          <Card.Header
-            title={intl.formatMessage({
-              id: 'Commission.ranking',
-            })}
-          />
-          <Card.Body>
-            <div>{ranking}</div>
-          </Card.Body>
-        </Card>
+        {
+          pageId === 1 ?
+            <Card full className="ranking-card">
+              <Card.Header
+                title={intl.formatMessage({
+                  id: 'Commission.ranking',
+                })}
+              />
+              <Card.Body>
+                <div>{ranking}</div>
+              </Card.Body>
+              <Card.Footer
+                content={`${intl.formatMessage({
+                  id: 'Commission.totalPoints',
+                })}：${total}`}
+              />
+            </Card>
+          : null
+        }
 
         {
           pageId === 1
@@ -508,7 +466,7 @@ class Commission extends Component {
         }
 
         {
-          this.loginUser.roleId === 0 ?
+          +this.loginUser.roleId === 0 ?
             <div className="toolbar">
               <Button
                 className="admin-btn"

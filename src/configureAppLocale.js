@@ -1,7 +1,13 @@
 import LANGS from './locales/langList'
 
 // get language
-const navigatorLang = navigator.language.toLowerCase()
+// const navigatorLang = navigator.language.toLowerCase()
+let navigatorLang = (navigator.languages && navigator.languages[0]) ||
+                    navigator.language ||
+                    navigator.userLanguage
+navigatorLang = navigatorLang.toLowerCase()
+// console.log('navigatorLang', navigatorLang)
+
 const showLangMap = [...LANGS].filter(
   ([k]) => !navigatorLang.localeCompare(k),
 )

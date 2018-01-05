@@ -13,6 +13,7 @@ require('whatwg-fetch');
 
 // add babel-polyfill for compatibility
 require('babel-polyfill');
+require('raf');
 
 // a polyfill of the ES6 Promise
 // require('es6-promise').polyfill();
