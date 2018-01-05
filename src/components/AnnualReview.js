@@ -41,7 +41,7 @@ class AnnualReview extends Component {
         method: 'GET',
       })
       const data = await resp.json()
-      // console.log('data', data)
+      console.log('data', data)
 
       this.setState({
         cardWidth,
@@ -285,7 +285,7 @@ class AnnualReview extends Component {
                         fontSize: '26',
                         color: '#888',
                         formatter: `{value}${intl.formatMessage({
-                          id: 'AnnualReview.meetingUnit',
+                          id: 'AnnualReview.roadshowUnit',
                         })}`,
                       },
                       axisLine: {
@@ -364,7 +364,7 @@ class AnnualReview extends Component {
                         fontSize: '26',
                         color: '#888',
                         formatter: `{value}${intl.formatMessage({
-                          id: 'AnnualReview.meetingUnit',
+                          id: 'AnnualReview.roadshowUnit',
                         })}`,
                       },
                       axisLine: {
@@ -459,7 +459,7 @@ class AnnualReview extends Component {
                       data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
                         'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                       axisLabel: {
-                        fontSize: '22',
+                        fontSize: '20',
                         color: '#888',
                         interval: 0,
                         fontStyle: 'oblique',
@@ -469,7 +469,27 @@ class AnnualReview extends Component {
                         showMaxLabel: true,
                       },
                     },
-                    yAxis: {
+                    yAxis: [{
+                      // max: 'dataMax',
+                      type: 'value',
+                      splitNumber: 3,
+                      scale: true,
+                      axisTick: {
+                        show: false,
+                      },
+                      axisLine: {
+                        show: false,
+                      },
+                      axisLabel: {
+                        fontSize: '24',
+                        align: 'right',
+                        color: '#888',
+                      },
+                    }, {
+                      nameLocation: 'start',
+                      // max: 'dataMax',
+                      splitNumber: 3,
+                      scale: true,
                       type: 'value',
                       axisTick: {
                         show: false,
@@ -478,11 +498,11 @@ class AnnualReview extends Component {
                         show: false,
                       },
                       axisLabel: {
-                        fontSize: '26',
-                        align: 'right',
+                        fontSize: '24',
+                        align: 'left',
                         color: '#888',
                       },
-                    },
+                    }],
                     series: [
                       {
                         name: intl.formatMessage({
@@ -495,6 +515,7 @@ class AnnualReview extends Component {
                         name: intl.formatMessage({
                           id: 'AnnualReview.roadshow',
                         }),
+                        yAxisIndex: 1,
                         type: 'line',
                         data: (roadshowMonthly && Object.values(roadshowMonthly)) || [],
                       },
@@ -608,8 +629,11 @@ class AnnualReview extends Component {
             extra={`IN ${this.curYear}`}
           />
           <Card.Body>
-            <div>{ `${Math.round(sportCount / 10e5)}
-            ${intl.formatMessage({
+            <div
+              style={{
+                fontSize: '1.2rem',
+              }}
+            >{ `${Math.round(sportCount / 1e4)}${intl.formatMessage({
               id: 'AnnualReview.sportUnit',
             })}` }</div>
           </Card.Body>
@@ -643,7 +667,7 @@ class AnnualReview extends Component {
                         type: 'treemap',
                         left: 0,
                         right: 0,
-                        roam: true,
+                        roam: false,
                         nodeClick: false,
                         breadcrumb: {
                           show: false,
@@ -659,7 +683,13 @@ class AnnualReview extends Component {
                                   normal: {
                                     show: true,
                                     fontSize: '24',
-                                    formatter: '{b}\n{c}',
+                                    formatter: (params) => {
+                                      const { data } = params
+                                      const showNum = `${Math.round(data.value / 1e4)}${intl.formatMessage({
+                                        id: 'AnnualReview.sportUnit',
+                                      })}`
+                                      return `${data.name}\n${showNum}`
+                                    },
                                   },
                                 },
                               })
