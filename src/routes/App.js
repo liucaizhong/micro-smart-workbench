@@ -65,7 +65,7 @@ const App = () => (
         exact
         path="/"
         render={() => (
-          <Redirect to="/annual-review" />
+          <Redirect to="/commission" />
         )}
       />
       <Route path="/commission" component={AsyncCommission} />

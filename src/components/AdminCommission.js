@@ -43,96 +43,102 @@ class AdminCommission extends Component {
     })
   }
 
+  onExport = (url) => {
+    const { intl, history } = this.props
+    fetch(url, {
+      method: 'GET',
+    })
+    .then((resp) => {
+      // console.log('resp', resp)
+      return resp.json()
+    })
+    .then((data) => {
+      // console.log('data', data)
+      Toast.hide()
+      const { type } = data
+      if (!type) {
+        Toast.success(intl.formatMessage({
+          id: 'Commission.dwdFile.success',
+        }), 1, () => {
+          history.goBack()
+        })
+      } else {
+        Toast.fail(intl.formatMessage({
+          id: 'Commission.dwdFile.fail',
+        }), 1)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
+  onUpload = (url, formData) => {
+    const { intl, history } = this.props
+    fetch(url, {
+      method: 'POST',
+      // headers: {
+      //   'Content-Type': 'multipart/form-data',
+      // },
+      body: formData,
+    })
+    .then((resp) => {
+      console.log('resp', resp)
+      return resp.json()
+    })
+    .then((data) => {
+      Toast.hide()
+      console.log('data', data)
+      const { type } = data
+      if (!type) {
+        Toast.success(intl.formatMessage({
+          id: 'Commission.updFile.success',
+        }), 1, () => {
+          history.goBack()
+        })
+      } else {
+        Toast.fail(intl.formatMessage({
+          id: 'Commission.updFile.fail1',
+        }), 1)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
   onConfirm = () => {
-    // console.log('confirm upload')
-    const { intl, history, loginUser: { userId } } = this.props
+    const { intl, loginUser: { userId } } = this.props
     const { pickedFileType, pickedDate, file, opId } = this.state
 
     if (opId) {
-      if (pickedFileType) {
-        console.log('export commission file')
-      } else {
-        Toast.loading(intl.formatMessage({
-          id: 'Commission.dwdFile.loading',
-        }), 0)
-        const urlExportPoints = process.env.NODE_ENV === 'production'
-                    ? './API/exportPaidian.php'
-                    : 'http://localhost:3000/exportPoints'
-
-        fetch(`${urlExportPoints}?year=${pickedDate[0]}&quarter=${pickedDate[1]}&userId=${userId}`, {
-          method: 'GET',
-        })
-        .then((resp) => {
-          // console.log('resp', resp)
-          return resp.json()
-        })
-        .then((data) => {
-          // console.log('data', data)
-          Toast.hide()
-          const { type } = data
-          if (!type) {
-            Toast.success(intl.formatMessage({
-              id: 'Commission.dwdFile.success',
-            }), 1, () => {
-              history.goBack()
-            })
-          } else {
-            Toast.fail(intl.formatMessage({
-              id: 'Commission.dwdFile.fail',
-            }), 1)
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      Toast.loading(intl.formatMessage({
+        id: 'Commission.dwdFile.loading',
+      }), 0)
+      switch (pickedFileType) {
+        case 0: {
+          const path = process.env.NODE_ENV === 'production'
+                      ? './API/exportPaidian.php'
+                      : 'http://localhost:3000/exportPoints'
+          const url = `${path}?year=${pickedDate[0]}&quarter=${pickedDate[1]}&userId=${userId}`
+          this.onExport(url)
+          break
+        }
+        case 1: {
+          console.log('export commission')
+          break
+        }
+        case 2: {
+          console.log('export fee')
+          break
+        }
+        default:
+          console.log('no such file type')
       }
     } else if (!file) {
       Toast.fail(intl.formatMessage({
         id: 'Commission.updFile.fail0',
       }), 1)
-    } else if (pickedFileType) {
-      Toast.loading(intl.formatMessage({
-        id: 'Commission.updFile.loading',
-      }), 0)
-      // submit
-      const formData = new FormData()
-
-      formData.append('type', pickedFileType)
-      formData.append('date', pickedDate)
-      formData.append('file', file, file.name)
-
-      const url = './API/uploadYongjin.php'
-
-      fetch(url, {
-        method: 'POST',
-        // headers: {
-        //   'Content-Type': 'multipart/form-data',
-        // },
-        body: formData,
-      })
-      .then((resp) => {
-        console.log('resp', resp)
-        return resp.json()
-      })
-      .then((data) => {
-        Toast.hide()
-        console.log('data', data)
-        const { type } = data
-        if (!type) {
-          Toast.success(intl.formatMessage({
-            id: 'Commission.updFile.success',
-          }), 1, () => {
-            history.goBack()
-          })
-        } else {
-          Toast.fail(intl.formatMessage({
-            id: 'Commission.updFile.fail1',
-          }), 1)
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
     } else {
       Toast.loading(intl.formatMessage({
         id: 'Commission.updFile.loading',
@@ -144,38 +150,25 @@ class AdminCommission extends Component {
       formData.append('date', pickedDate)
       formData.append('file', file, file.name)
 
-      const url = './API/uploadPaidian.php'
-
-      fetch(url, {
-        method: 'POST',
-        // headers: {
-        //   'Content-Type': 'multipart/form-data',
-        // },
-        body: formData,
-      })
-      .then((resp) => {
-        // console.log('resp', resp)
-        return resp.json()
-      })
-      .then((data) => {
-        Toast.hide()
-        // console.log('data', data)
-        const { type } = data
-        if (!type) {
-          Toast.success(intl.formatMessage({
-            id: 'Commission.updFile.success',
-          }), 1, () => {
-            history.goBack()
-          })
-        } else {
-          Toast.fail(intl.formatMessage({
-            id: 'Commission.updFile.fail1',
-          }), 1)
+      switch (pickedFileType) {
+        case 0: {
+          const url = './API/uploadPaidian.php'
+          this.onUpload(url, formData)
+          break
         }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+        case 1: {
+          const url = './API/uploadYongjin.php'
+          this.onUpload(url, formData)
+          break
+        }
+        case 2: {
+          const url = './API/uploadCost.php'
+          this.onUpload(url, formData)
+          break
+        }
+        default:
+          console.log('no such file type')
+      }
     }
   }
 
@@ -213,6 +206,11 @@ class AdminCommission extends Component {
         id: 'Commission.mainTitle1',
       }),
       value: 1,
+    }, {
+      label: intl.formatMessage({
+        id: 'Commission.mainTitle2',
+      }),
+      value: 2,
     }]
 
     const datePickerData = pickedFileType ? [
