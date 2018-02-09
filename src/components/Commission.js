@@ -292,6 +292,16 @@ class Commission extends Component {
       }
     })
 
+    const onTable0Row = (record) => ({
+      onClick() {
+        // setCommissionCond({
+        //   category: record.category,
+        // })
+        // history.push('/points-detail')
+        console.log('record', record)
+      },
+    })
+
     const columnsTable1 = [{
       title: intl.formatMessage({
         id: 'Commission.pointField0',
@@ -428,6 +438,7 @@ class Commission extends Component {
           id="table0"
           columns={columnsTable0}
           data={dataTable0}
+          onRow={onTable0Row}
         />
 
         {
