@@ -13,6 +13,9 @@ const AsyncAdminCommission = AsyncComponent(
 const AsyncPointsDetail = AsyncComponent(
   () => import('../containers/CPointsDetail'),
 )
+const AsyncCommissionsDetail = AsyncComponent(
+  () => import('../containers/CCommissionsDetail'),
+)
 const AsyncAnnualReview = AsyncComponent(
   () => import('../containers/CAnnualReview'),
 )
@@ -71,6 +74,7 @@ const App = () => (
       <Route path="/commission" component={AsyncCommission} />
       <Route path="/upd-commission" component={AsyncAdminCommission} />
       <Route path="/points-detail" component={AsyncPointsDetail} />
+      <Route path="/commissions-detail" component={AsyncCommissionsDetail} />
       <Route path="/annual-review" component={AsyncAnnualReview} />
       {/* </AnimatedSwitch> */}
     </Switch>

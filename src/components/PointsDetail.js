@@ -10,18 +10,9 @@ class PointsDetail extends Component {
   constructor(props) {
     super(props)
 
-    // const { location: { search }, commissionCond } = props
-    // console.log('location', location)
-    // console.log('commissionCond', commissionCond)
-    // const i = search.indexOf('q=')
-    // const cond = search.substr(i + 2)
-    // const obj = JSON.parse(cond)
-    // const category = decodeURI(obj.category)
-    const { commissionCond } = props
-    console.log('commissionCond', commissionCond)
     const { pickedUser: [groupId, userId],
       pickedDate: [year, quarter],
-      category } = commissionCond
+      category } = props.commissionCond
 
     this.state = {
       groupId,
@@ -53,13 +44,13 @@ class PointsDetail extends Component {
       return resp.json()
     })
     .then((data) => {
-      console.log('data', data)
+      // console.log('data', data)
       if (data) {
         this.setState({
           data,
         })
       } else {
-        history.push('/')
+        history.push('/commission')
       }
 
       Toast.hide()
@@ -140,11 +131,11 @@ class PointsDetail extends Component {
 PointsDetail.propTypes = {
   intl: intlShape.isRequired,
   history: PropTypes.object.isRequired,
-  // commissionCond: PropTypes.object.isRequired,
   commissionCond: PropTypes.shape({
     pickedUser: PropTypes.array,
     pickedDate: PropTypes.array,
     category: PropTypes.string,
+    customer: PropTypes.string,
   }).isRequired,
 }
 

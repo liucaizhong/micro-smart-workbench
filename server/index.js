@@ -17,6 +17,9 @@ const urlMap = {
   '/getPointDetail': `${orientUrl}/Revenue/API/getPaidianDetail.php`,
   '/exportPoints': `${orientUrl}/Revenue/API/exportPaidian.php`,
   '/getAnnualSummary': `${orientUrl}/Summary/API/getSummary.php`,
+  '/getFee': `${orientUrl}/Revenue/API/getFee.php`,
+  '/getCommission': `${orientUrl}/Revenue/API/getYongjin.php`,
+  '/getCommissionDetail': `${orientUrl}/Revenue/API/getYongjinDetail.php`,
 }
 
 function mapUrl(rawUrl) {
@@ -179,6 +182,30 @@ module.exports = () => {
   // get annual summary
   router.get('/getAnnualSummary', (req, res) => {
     console.log('getAnnualSummary start!')
+    const urlObj = url.parse(req.url)
+    urlObj.pathname = mapUrl(urlObj.pathname)
+    const realUrl = url.format(urlObj)
+    requestGet(realUrl, req, res)
+  })
+  // get fee
+  router.get('/getFee', (req, res) => {
+    console.log('getFee start!')
+    const urlObj = url.parse(req.url)
+    urlObj.pathname = mapUrl(urlObj.pathname)
+    const realUrl = url.format(urlObj)
+    requestGet(realUrl, req, res)
+  })
+  // get commission
+  router.get('/getCommission', (req, res) => {
+    console.log('getCommission start!')
+    const urlObj = url.parse(req.url)
+    urlObj.pathname = mapUrl(urlObj.pathname)
+    const realUrl = url.format(urlObj)
+    requestGet(realUrl, req, res)
+  })
+  // get commission detail
+  router.get('/getCommissionDetail', (req, res) => {
+    console.log('getCommissionDetail start!')
     const urlObj = url.parse(req.url)
     urlObj.pathname = mapUrl(urlObj.pathname)
     const realUrl = url.format(urlObj)

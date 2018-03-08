@@ -46,13 +46,6 @@ class Commission extends Component {
       total: 0,
       fee: [],
       points: [],
-      // commissions: [{
-      //   category: '交银施罗德',
-      //   commission: '2,921,235.34',
-      // }, {
-      //   category: '华安',
-      //   commission: '5,021,022.01',
-      // }],
       commissions: [],
     }
   }
@@ -84,23 +77,22 @@ class Commission extends Component {
     // console.log('receive next props')
     const { intl, commissionCond: { pickedUser, pickedDate, pageId } } = nextProps
 
-    if (pageId === 1) {
-      Toast.loading(intl.formatMessage({
-        id: 'Common.loading',
-      }), 0)
-      const urlGetPoints = process.env.NODE_ENV === 'production'
-                  ? './API/getPaidian.php'
-                  : 'http://localhost:3000/getPoints'
+    Toast.loading(intl.formatMessage({
+      id: 'Common.loading',
+    }), 0)
 
-      fetch(`${urlGetPoints}?userId=${pickedUser[1]}&year=${pickedDate[0]}&quarter=${pickedDate[1]}`, {
+    const getPointsOrCommissions = pageId === 1 ? () => {
+      const urlGetPoints = process.env.NODE_ENV === 'production'
+                    ? './API/getPaidian.php'
+                    : 'http://localhost:3000/getPoints'
+
+      return fetch(`${urlGetPoints}?userId=${pickedUser[1]}&year=${pickedDate[0]}&quarter=${pickedDate[1]}`, {
         method: 'GET',
       })
       .then((resp) => {
-        // console.log('resp', resp)
         return resp.json()
       })
       .then((data) => {
-        // console.log('data', data)
         const total = data.detail && data.detail.reduce((t, p) => {
           return t + (isNaN(+p.point) ? 0 : +p.point)
         }, 0)
@@ -112,18 +104,64 @@ class Commission extends Component {
             id: 'Commission.ranking0',
           }),
         })
-        Toast.hide()
+        return Promise.resolve()
       })
       .catch((err) => {
         console.log(err)
+        return Promise.reject()
       })
-    } else {
-      // for commission
-      // Toast.loading(intl.formatMessage({
-      //   id: 'Common.loading',
-      // }), 0)
-      Toast.hide()
     }
+    : () => {
+      const urlGetCommissions = process.env.NODE_ENV === 'production'
+                    ? './API/getYongjin.php'
+                    : 'http://localhost:3000/getCommission'
+
+      return fetch(`${urlGetCommissions}?userId=${pickedUser[1]}&year=${pickedDate[0]}&date=${pickedDate[1]}`, {
+        method: 'GET',
+      })
+      .then((resp) => {
+        return resp.json()
+      })
+      .then((data) => {
+        // console.log('commission', data)
+        this.setState({
+          commissions: data || [],
+        })
+        return Promise.resolve()
+      })
+      .catch((err) => {
+        console.log(err)
+        return Promise.reject()
+      })
+    }
+
+    const getFee = () => {
+      const urlGetFee = process.env.NODE_ENV === 'production'
+                  ? './API/getFee.php'
+                  : 'http://localhost:3000/getFee'
+
+      return fetch(`${urlGetFee}?userId=${pickedUser[1]}&year=${pickedDate[0]}&${pageId === 1 ? 'quarter' : 'date'}=${pickedDate[1]}`, {
+        method: 'GET',
+      })
+      .then((resp) => {
+        return resp.json()
+      })
+      .then((data) => {
+        console.log('fee', data)
+        return Promise.resolve()
+      })
+      .catch((err) => {
+        return Promise.reject(err)
+      })
+    }
+
+    Promise.all([getPointsOrCommissions(), getFee()])
+    .then(() => {
+      Toast.hide()
+    })
+    .catch((errs) => {
+      console.log('errs', errs)
+    })
   }
 
   onAdminBtn = () => {
@@ -329,9 +367,6 @@ class Commission extends Component {
           category: record.category,
         })
         history.push('/points-detail')
-        // history.push(`/points-detail?q=${JSON.stringify({
-        //   category: encodeURI(record.category),
-        // })}`)
       },
     })
 
@@ -339,14 +374,14 @@ class Commission extends Component {
       title: intl.formatMessage({
         id: 'Commission.commissionField0',
       }),
-      dataIndex: 'category',
-      key: 'category',
+      dataIndex: 'customer',
+      key: 'customer',
     }, {
       title: intl.formatMessage({
         id: 'Commission.commissionField1',
       }),
-      dataIndex: 'commission',
-      key: 'commission',
+      dataIndex: 'amount',
+      key: 'amount',
       render: (val) => {
         return (
           <span>
@@ -362,6 +397,15 @@ class Commission extends Component {
         ...row,
         key: i,
       }
+    })
+
+    const onTable2Row = (record) => ({
+      onClick() {
+        setCommissionCond({
+          customer: record.cid,
+        })
+        history.push('/commissions-detail')
+      },
     })
 
     return (
@@ -473,6 +517,7 @@ class Commission extends Component {
             id="table2"
             columns={columnsTable2}
             data={dataTable2}
+            onRow={onTable2Row}
           />
         }
 

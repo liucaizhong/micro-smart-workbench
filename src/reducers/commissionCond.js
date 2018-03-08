@@ -3,6 +3,7 @@ const commissionCond = (state = {
   pickedDate: [],
   pageId: 0,
   category: '',
+  customer: '',
 }, action = {}) => {
   switch (action.type) {
     case 'SET_COMMISSION_COND':

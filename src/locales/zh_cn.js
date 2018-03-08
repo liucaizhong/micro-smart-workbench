@@ -8,6 +8,8 @@ module.exports = {
   'Commission.pointField1': '派点',
   'Commission.commissionField0': '客户',
   'Commission.commissionField1': '佣金',
+  'Commission.commissionField2': '类别',
+  'Commission.commissionField3': '金额',
   'Commission.mainTitle0': '研究员派点',
   'Commission.mainTitle1': '销售佣金',
   'Commission.mainTitle2': '已用费用',
