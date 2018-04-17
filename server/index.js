@@ -20,6 +20,7 @@ const urlMap = {
   '/getFee': `${orientUrl}/Revenue/API/getFee.php`,
   '/getCommission': `${orientUrl}/Revenue/API/getYongjin.php`,
   '/getCommissionDetail': `${orientUrl}/Revenue/API/getYongjinDetail.php`,
+  '/getTotalCommission': `${orientUrl}/Revenue/API/getYongjinSummary.php`,
 }
 
 function mapUrl(rawUrl) {
@@ -206,6 +207,14 @@ module.exports = () => {
   // get commission detail
   router.get('/getCommissionDetail', (req, res) => {
     console.log('getCommissionDetail start!')
+    const urlObj = url.parse(req.url)
+    urlObj.pathname = mapUrl(urlObj.pathname)
+    const realUrl = url.format(urlObj)
+    requestGet(realUrl, req, res)
+  })
+  // get total commission
+  router.get('/getTotalCommission', (req, res) => {
+    console.log('getTotalCommission start!')
     const urlObj = url.parse(req.url)
     urlObj.pathname = mapUrl(urlObj.pathname)
     const realUrl = url.format(urlObj)

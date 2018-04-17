@@ -86,6 +86,12 @@ class CommissionsDetail extends Component {
           </span>
         )
       },
+    }, {
+      title: intl.formatMessage({
+        id: 'Commission.commissionField4',
+      }),
+      dataIndex: 'comment',
+      key: 'comment',
     }]
 
     const tableData = data.map((row, i) => {

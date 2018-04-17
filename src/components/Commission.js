@@ -21,7 +21,7 @@ class Commission extends Component {
     this.quarter = moment().quarter()
 
     const { pickedUser, pickedDate, pageId } = props.commissionCond
-    const newPageId = +pageId || +props.loginUser.roleId || 1
+    const newPageId = +pageId || +props.loginUser.roleId || 2
 
     // set default year, month, quarter
     this.defaultQuarter = this.quarter - 1 || 4
@@ -47,6 +47,7 @@ class Commission extends Component {
       fee: [],
       points: [],
       commissions: [],
+      totalAmount: 0,
     }
   }
 
@@ -111,7 +112,7 @@ class Commission extends Component {
         return Promise.reject()
       })
     }
-    : () => {
+    : +this.loginUser.roleId || this.loginUser.userId !== pickedUser[1] ? () => {
       const urlGetCommissions = process.env.NODE_ENV === 'production'
                     ? './API/getYongjin.php'
                     : 'http://localhost:3000/getCommission'
@@ -126,6 +127,28 @@ class Commission extends Component {
         // console.log('commission', data)
         this.setState({
           commissions: data || [],
+        })
+        return Promise.resolve()
+      })
+      .catch((err) => {
+        console.log(err)
+        return Promise.reject()
+      })
+    } : () => {
+      const urlGetCommissions = process.env.NODE_ENV === 'production'
+              ? './API/getYongjinSummary.php'
+              : 'http://localhost:3000/getTotalCommission'
+
+      return fetch(`${urlGetCommissions}?year=${pickedDate[0]}&date=${pickedDate[1]}`, {
+        method: 'GET',
+      })
+      .then((resp) => {
+        return resp.json()
+      })
+      .then((data) => {
+        console.log('total commission', data)
+        this.setState({
+          totalAmount: data,
         })
         return Promise.resolve()
       })
@@ -172,8 +195,19 @@ class Commission extends Component {
   render() {
     const { intl, history, setCommissionCond } = this.props
     const { fee, points, userList, pickedDate,
-      pickedUser, pageId, commissions, ranking, total,
+      pickedUser, pageId, commissions, ranking, total, totalAmount,
     } = this.state
+
+    const roundNumberToTenThousand = (num) => {
+      if (num) {
+        const temp = Math.round(num / 10e4) * 10e4
+        return temp > 10000 ?
+        `${temp / 10000} ${intl.formatMessage({
+          id: 'AnnualReview.sportUnit',
+        })}` : temp
+      }
+      return num
+    }
 
     const renderListHeader = () => {
       return pageId === 1 ? intl.formatMessage({
@@ -513,12 +547,35 @@ class Commission extends Component {
             data={dataTable1}
             onRow={onTable1Row}
           />
-          : <Table
+          : +this.loginUser.roleId || this.loginUser.userId !== pickedUser[1]
+          ? <Table
             id="table2"
             columns={columnsTable2}
             data={dataTable2}
             onRow={onTable2Row}
           />
+          : <div>
+            <Card full className="ranking-card">
+              <Card.Header
+                title={intl.formatMessage({
+                  id: 'Commission.totalAmount0',
+                })}
+              />
+              <Card.Body>
+                <div>{roundNumberToTenThousand(totalAmount[0])}</div>
+              </Card.Body>
+            </Card>
+            <Card full className="ranking-card">
+              <Card.Header
+                title={intl.formatMessage({
+                  id: 'Commission.totalAmount1',
+                })}
+              />
+              <Card.Body>
+                <div>{roundNumberToTenThousand(totalAmount[1])}</div>
+              </Card.Body>
+            </Card>
+          </div>
         }
 
         {
