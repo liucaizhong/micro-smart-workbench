@@ -171,6 +171,9 @@ class Commission extends Component {
       })
       .then((data) => {
         console.log('fee', data)
+        this.setState({
+          fee: data,
+        })
         return Promise.resolve()
       })
       .catch((err) => {
