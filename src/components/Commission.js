@@ -48,6 +48,7 @@ class Commission extends Component {
       points: [],
       commissions: [],
       totalAmount: 0,
+      showCommission: false,
     }
   }
 
@@ -77,6 +78,7 @@ class Commission extends Component {
   componentWillReceiveProps(nextProps) {
     // console.log('receive next props')
     const { intl, commissionCond: { pickedUser, pickedDate, pageId } } = nextProps
+    const { showCommission } = this.state
 
     Toast.loading(intl.formatMessage({
       id: 'Common.loading',
@@ -94,6 +96,7 @@ class Commission extends Component {
         return resp.json()
       })
       .then((data) => {
+        // console.log(data)
         const total = data.detail && data.detail.reduce((t, p) => {
           return t + (isNaN(+p.point) ? 0 : +p.point)
         }, 0)
@@ -112,12 +115,14 @@ class Commission extends Component {
         return Promise.reject()
       })
     }
-    : +this.loginUser.roleId || this.loginUser.userId !== pickedUser[1] ? () => {
+    // : +this.loginUser.roleId || this.loginUser.userId !== pickedUser[1] ? () => {
+    : +this.loginUser.roleId === 2 ? () => {
       const urlGetCommissions = process.env.NODE_ENV === 'production'
                     ? './API/getYongjin.php'
                     : 'http://localhost:3000/getCommission'
 
-      return fetch(`${urlGetCommissions}?userId=${pickedUser[1]}&year=${pickedDate[0]}&date=${pickedDate[1]}`, {
+      return showCommission && this.loginUser.userId === pickedUser[1]
+      ? fetch(`${urlGetCommissions}?userId=${pickedUser[1]}&year=${pickedDate[0]}&date=${pickedDate[1]}`, {
         method: 'GET',
       })
       .then((resp) => {
@@ -133,7 +138,7 @@ class Commission extends Component {
       .catch((err) => {
         console.log(err)
         return Promise.reject()
-      })
+      }) : Promise.resolve()
     } : () => {
       const urlGetCommissions = process.env.NODE_ENV === 'production'
               ? './API/getYongjinSummary.php'
@@ -163,7 +168,8 @@ class Commission extends Component {
                   ? './API/getFee.php'
                   : 'http://localhost:3000/getFee'
 
-      return fetch(`${urlGetFee}?userId=${pickedUser[1]}&year=${pickedDate[0]}&${pageId === 1 ? 'quarter' : 'date'}=${pickedDate[1]}`, {
+      return pageId === 2
+      ? fetch(`${urlGetFee}?userId=${pickedUser[1]}&year=${pickedDate[0]}&${pageId === 1 ? 'quarter' : 'date'}=${pickedDate[1]}`, {
         method: 'GET',
       })
       .then((resp) => {
@@ -178,7 +184,7 @@ class Commission extends Component {
       })
       .catch((err) => {
         return Promise.reject(err)
-      })
+      }) : Promise.resolve()
     }
 
     Promise.all([getPointsOrCommissions(), getFee()])
@@ -197,15 +203,17 @@ class Commission extends Component {
 
   render() {
     const { intl, history, setCommissionCond } = this.props
-    const { fee, points, userList, pickedDate,
+    const { fee, points, userList, pickedDate, showCommission,
       pickedUser, pageId, commissions, ranking, total, totalAmount,
     } = this.state
 
+    const showFee = (Math.floor((fee.used * 100) / fee.total) - 90) > 0
+
     const roundNumberToTenThousand = (num) => {
       if (num) {
-        const temp = Math.round(num / 10e4) * 10e4
-        return temp > 10000 ?
-        `${temp / 10000} ${intl.formatMessage({
+        const temp = Math.round(num / 1e4) * 1e4
+        return temp > 1e4 ?
+        `${temp / 1e4} ${intl.formatMessage({
           id: 'AnnualReview.sportUnit',
         })}` : temp
       }
@@ -360,12 +368,16 @@ class Commission extends Component {
       },
     }]
 
-    const dataTable0 = fee.map((row, i) => {
-      return {
-        ...row,
-        key: i,
-      }
-    })
+    // const dataTable0 = fee.map((row, i) => {
+    //   return {
+    //     ...row,
+    //     key: i,
+    //   }
+    // })
+    const dataTable0 = [{
+      ...fee,
+      key: 0,
+    }]
 
     const onTable0Row = (record) => ({
       onClick() {
@@ -515,12 +527,17 @@ class Commission extends Component {
           </Picker>
         </List>
 
-        <Table
-          id="table0"
-          columns={columnsTable0}
-          data={dataTable0}
-          onRow={onTable0Row}
-        />
+        {
+          pageId === 1 || !showFee
+          ? null
+          :
+          <Table
+            id="table0"
+            columns={columnsTable0}
+            data={dataTable0}
+            onRow={onTable0Row}
+          />
+        }
 
         {
           pageId === 1 ?
@@ -550,34 +567,30 @@ class Commission extends Component {
             data={dataTable1}
             onRow={onTable1Row}
           />
-          : +this.loginUser.roleId || this.loginUser.userId !== pickedUser[1]
+          // : +this.loginUser.roleId || this.loginUser.userId !== pickedUser[1]
+          : +this.loginUser.roleId === 2
+          ? showCommission && this.loginUser.userId === pickedUser[1]
           ? <Table
             id="table2"
             columns={columnsTable2}
             data={dataTable2}
             onRow={onTable2Row}
-          />
+          /> : null
           : <div>
-            <Card full className="ranking-card">
-              <Card.Header
-                title={intl.formatMessage({
-                  id: 'Commission.totalAmount0',
-                })}
-              />
-              <Card.Body>
-                <div>{roundNumberToTenThousand(totalAmount[0])}</div>
-              </Card.Body>
-            </Card>
-            <Card full className="ranking-card">
-              <Card.Header
-                title={intl.formatMessage({
-                  id: 'Commission.totalAmount1',
-                })}
-              />
-              <Card.Body>
-                <div>{roundNumberToTenThousand(totalAmount[1])}</div>
-              </Card.Body>
-            </Card>
+            {
+              [0, 1, 2, 3, 4].map((v) => (
+                <Card full className="ranking-card" key={v}>
+                  <Card.Header
+                    title={intl.formatMessage({
+                      id: `Commission.totalAmount${v}`,
+                    })}
+                  />
+                  <Card.Body>
+                    <div>{roundNumberToTenThousand(totalAmount[v] || 0)}</div>
+                  </Card.Body>
+                </Card>
+              ))
+            }
           </div>
         }
 
