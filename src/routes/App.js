@@ -19,6 +19,9 @@ const AsyncCommissionsDetail = AsyncComponent(
 const AsyncAnnualReview = AsyncComponent(
   () => import('../containers/CAnnualReview'),
 )
+const AsyncInternManagement = AsyncComponent(
+  () => import('../components/InternManagement'),
+)
 
 // const mapStyles = (styles) => {
 //   return {
@@ -68,7 +71,7 @@ const App = () => (
         exact
         path="/"
         render={() => (
-          <Redirect to="/commission" />
+          <Redirect to="/intern" />
         )}
       />
       <Route path="/commission" component={AsyncCommission} />
@@ -76,6 +79,7 @@ const App = () => (
       <Route path="/points-detail" component={AsyncPointsDetail} />
       <Route path="/commissions-detail" component={AsyncCommissionsDetail} />
       <Route path="/annual-review" component={AsyncAnnualReview} />
+      <Route path="/intern" component={AsyncInternManagement} />
       {/* </AnimatedSwitch> */}
     </Switch>
   </Router>
