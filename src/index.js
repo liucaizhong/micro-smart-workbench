@@ -8,7 +8,7 @@ import 'intl/locale-data/jsonp/en.js'
 import configureStore from './configureStore'
 import configureAppLocale from './configureAppLocale'
 import App from './routes/App'
-// import registerServiceWorker from './registerServiceWorker'
+import registerServiceWorker from './registerServiceWorker'
 import './index.less'
 
 // set locale langage data
@@ -51,4 +51,4 @@ render(
   </LocaleProvider>,
   document.getElementById('root'),
 )
-// registerServiceWorker()
+registerServiceWorker()

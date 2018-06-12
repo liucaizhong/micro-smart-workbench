@@ -8,6 +8,20 @@ body {
   }
 }
 
+.btn-group {
+  position: fixed;
+  box-sizing: border-box;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: .2rem;
+
+  a {
+    font-size: .32rem;
+    margin-bottom: .2rem;
+  }
+}
+
 .commission-div {
   position: relative;
   height: 100%;
@@ -165,20 +179,6 @@ body {
       }
     }
   }
-
-  .btn-group {
-    position: fixed;
-    box-sizing: border-box;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    padding: .2rem;
-
-    a {
-      font-size: .32rem;
-      margin-bottom: .2rem;
-    }
-  }
 }
 
 .rc-table {
@@ -246,6 +246,125 @@ body {
 
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+}
+
+.intern-management {
+  width: 100vw;
+  height: 100vh;
+
+  .intern-list {
+    width: 100vw;
+    height: calc(100vh - .88rem - .94rem);
+    overflow: auto;
+
+    .am-list-view-scrollview  {
+      // padding-top: .8rem;
+    }
+
+    .am-list-header {
+      padding: 20px 18px 15px;
+      background: #fff;
+    //   top: .88rem;
+    //   height: .8rem;
+    //   position: fixed;
+    //   z-index: 999;
+    }
+
+    .row-data-header, .row-data {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      > span {
+        flex: 1 0 33%;
+      }
+    }
+
+    .row-data-header {
+      text-align: center;
+
+      .status {
+        flex: 1 0 33%;
+
+        .am-icon {
+          position: relative;
+          top: .08rem;
+          left: .1rem;
+        }
+      }
+    }
+
+    .row-data {
+      text-align: center;
+      height: 1rem;
+      padding: 20px 18px;
+    }
+  }
+
+  footer {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    position: relative;
+
+    > a {
+      flex: 1;
+      border-radius: 0;
+
+      span {
+        font-size: .28rem;
+      }
+    }
+
+    .upload {
+      position: relative;
+      box-sizing: border-box;
+      padding-top: 0.14rem;
+      padding-bottom: 0.14rem;
+      background: #fff;
+      border: 1PX solid #ddd;
+      flex: 1;
+
+      .file-upd-btn {
+        position: absolute;
+        top: 0;
+        cursor: pointer;
+        right: 0;
+        color: #bfbfbf;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        line-height: 2;
+
+        input {
+          position: absolute;
+          font-size: .4rem;
+          line-height: 2.2;
+          right: 0;
+          top: 0;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        span {
+          display: block;
+          text-align: center;
+          color: #000;
+          box-sizing: border-box;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding-top: 0.14rem;
+          padding-bottom: 0.14rem;
+          padding-right: 0.1rem;
+        }
+      }
     }
   }
 }

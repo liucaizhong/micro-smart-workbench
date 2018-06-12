@@ -93,5 +93,6 @@
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
     }
-  }
+  },
+  "no-unused-vars": ["error", { "args": "none" }]
 }
