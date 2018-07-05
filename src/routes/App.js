@@ -25,6 +25,9 @@ const AsyncInternManagement = AsyncComponent(
 const AsyncInternDetail = AsyncComponent(
   () => import('../components/InternDetail'),
 )
+const AsyncSalesAnalysis = AsyncComponent(
+  () => import('../containers/CSalesAnalysis'),
+)
 
 // const mapStyles = (styles) => {
 //   return {
@@ -91,6 +94,7 @@ const App = () => (
         }
       />
       {/* </AnimatedSwitch> */}
+      <Route path="/sales-analysis" component={AsyncSalesAnalysis} />
     </Switch>
   </Router>
 )

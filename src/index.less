@@ -369,3 +369,66 @@ body {
     }
   }
 }
+
+.sales-analysis {
+  .chart:not(:last-child) {
+    margin-bottom: 30px;
+  }
+
+  .fee-detail {
+    padding: 20px;
+    padding-top: 0;
+
+    table {
+      width: 100%;
+      display: table;
+      border: solid gray;
+      border-width: 1px 0px 0px 1px;
+      border-collapse: collapse;
+
+      th, td {
+        border: solid gray;
+        border-width: 0px 1px 1px 0px;
+        text-align: center;
+        height: 1rem;
+      }
+
+      .title {
+        font-weight: 400;
+        background: #92e6e6;
+      }
+
+      .total {
+        background: #ffd933;
+
+        > .title {
+          background: #ffd933;
+        }
+      }
+    }
+  }
+
+  .road-show {
+    padding: 20px;
+
+    header {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      padding-bottom: 20px;
+    }
+
+    table {
+      display: table;
+      border-collapse: separate;
+      border-spacing: 2px;
+      width: 100%;
+
+      th, td {
+        height: 1rem;
+        text-align: center;
+        background: #fff9e0;
+      }
+    }
+  }
+}

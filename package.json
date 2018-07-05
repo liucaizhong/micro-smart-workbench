@@ -5,7 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "antd-mobile": "^2.1.9",
-    "echarts": "^3.8.5",
+    "echarts": "^4.1.0",
     "intl": "^1.2.5",
     "moment": "^2.19.2",
     "object-assign": "4.1.1",

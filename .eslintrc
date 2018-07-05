@@ -94,5 +94,6 @@
       "experimentalObjectRestSpread": true
     }
   },
-  "no-unused-vars": ["error", { "args": "none" }]
+  "no-unused-vars": ["error", { "args": "none" }],
+  "quote-props": ["error", "as-needed", { "keywords": true, "unnecessary": false }]
 }
