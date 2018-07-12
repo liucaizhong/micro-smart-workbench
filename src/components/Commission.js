@@ -207,7 +207,9 @@ class Commission extends Component {
       pickedUser, pageId, commissions, ranking, total, totalAmount,
     } = this.state
 
-    const showFee = (Math.floor((fee.used * 100) / fee.total) - 90) > 0
+    const showFee = !+this.loginUser.roleId
+      || (Math.floor((fee.used * 100) / fee.total) - 90) > 0
+    // console.log('showFee', showFee)
 
     const roundNumberToTenThousand = (num) => {
       if (num) {

@@ -77,7 +77,7 @@ const App = () => (
         exact
         path="/"
         render={() => (
-          <Redirect to="/intern" />
+          <Redirect to="/commission" />
         )}
       />
       <Route path="/commission" component={AsyncCommission} />
