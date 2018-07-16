@@ -17,132 +17,139 @@ class SalesAnalysis extends Component {
     this.state = {
       pickedUser: [props.loginUser.groupId, props.loginUser.userId],
       userList: [],
-      customers: ['富国', '天治', '中银', '富安达'],
-      rank: {
-        // Q1, Q2, Q3, Q4
-        '富国': [4, 6, 3, 2],
-        '天治': [2, 10, 7, 5],
-        '中银': [6, 3, 11, 2],
-        '富安达': [4, 8, 3, 1],
-      },
+      // customers: ['富国', '天治', '中银', '富安达'],
+      // rank: {
+      //   // Q1, Q2, Q3, Q4
+      //   '富国': [4, 6, 3, 2],
+      //   '天治': [2, 10, 7, 5],
+      //   '中银': [6, 3, 11, 2],
+      //   '富安达': [4, 8, 3, 1],
+      // },
       feeVariety: ['代销费用', '代付费用', '专家费', '剩余毛佣金'],
       feeTableVariety: ['毛佣金', '专家费', '代付费用', '代销费用', '合计', '剩余毛佣金'],
-      fee: {
-        // '富国', '天治', '中银', '富安达'
-        '代销费用': [{
-          amount: 205,
-          percent: '20.2%',
-        }, {
-          amount: 0,
-          percent: '0.0%',
-        }, {
-          amount: 2,
-          percent: '1.6%',
-        }, {
-          amount: 35,
-          percent: '10.1%',
-        }], // 代销费用
-        '代付费用': [{
-          amount: 103,
-          percent: '10.2%',
-        }, {
-          amount: 75,
-          percent: '12.5%',
-        }, {
-          amount: 56,
-          percent: '51.2%',
-        }, {
-          amount: 103,
-          percent: '30.1%',
-        }], // 代付费用
-        '专家费': [{
-          amount: 9,
-          percent: '0.9%',
-        }, {
-          amount: 9,
-          percent: '1.4%',
-        }, {
-          amount: 0,
-          percent: '0.0%',
-        }, {
-          amount: 0,
-          percent: '0.0%',
-        }], // 专家费
-        '剩余毛佣金': [{
-          amount: 699,
-          percent: '',
-        }, {
-          amount: 518,
-          percent: '',
-        }, {
-          amount: 52,
-          percent: '',
-        }, {
-          amount: 205,
-          percent: '',
-        }], // 剩余毛佣金
-        '毛佣金': [{
-          amount: 1016,
-          percent: '',
-        }, {
-          amount: 602,
-          percent: '',
-        }, {
-          amount: 110,
-          percent: '',
-        }, {
-          amount: 343,
-          percent: '',
-        }], // 毛佣金
-        '合计': [{
-          amount: 317,
-          percent: '31.2%',
-        }, {
-          amount: 84,
-          percent: '13.9%',
-        }, {
-          amount: 58,
-          percent: '52.8%',
-        }, {
-          amount: 138,
-          percent: '40.2%',
-        }], // 合计
-      },
-      otherFee: {
-        amount: 12,
-        percent: '1.1%',
-      },
+      // fee: {
+      //   // '富国', '天治', '中银', '富安达'
+      //   '代销费用': [{
+      //     amount: 205,
+      //     percent: '20.2%',
+      //   }, {
+      //     amount: 0,
+      //     percent: '0.0%',
+      //   }, {
+      //     amount: 2,
+      //     percent: '1.6%',
+      //   }, {
+      //     amount: 35,
+      //     percent: '10.1%',
+      //   }], // 代销费用
+      //   '代付费用': [{
+      //     amount: 103,
+      //     percent: '10.2%',
+      //   }, {
+      //     amount: 75,
+      //     percent: '12.5%',
+      //   }, {
+      //     amount: 56,
+      //     percent: '51.2%',
+      //   }, {
+      //     amount: 103,
+      //     percent: '30.1%',
+      //   }], // 代付费用
+      //   '专家费': [{
+      //     amount: 9,
+      //     percent: '0.9%',
+      //   }, {
+      //     amount: 9,
+      //     percent: '1.4%',
+      //   }, {
+      //     amount: 0,
+      //     percent: '0.0%',
+      //   }, {
+      //     amount: 0,
+      //     percent: '0.0%',
+      //   }], // 专家费
+      //   '剩余毛佣金': [{
+      //     amount: 699,
+      //     percent: '',
+      //   }, {
+      //     amount: 518,
+      //     percent: '',
+      //   }, {
+      //     amount: 52,
+      //     percent: '',
+      //   }, {
+      //     amount: 205,
+      //     percent: '',
+      //   }], // 剩余毛佣金
+      //   '毛佣金': [{
+      //     amount: 1016,
+      //     percent: '',
+      //   }, {
+      //     amount: 602,
+      //     percent: '',
+      //   }, {
+      //     amount: 110,
+      //     percent: '',
+      //   }, {
+      //     amount: 343,
+      //     percent: '',
+      //   }], // 毛佣金
+      //   '合计': [{
+      //     amount: 317,
+      //     percent: '31.2%',
+      //   }, {
+      //     amount: 84,
+      //     percent: '13.9%',
+      //   }, {
+      //     amount: 58,
+      //     percent: '52.8%',
+      //   }, {
+      //     amount: 138,
+      //     percent: '40.2%',
+      //   }], // 合计
+      // },
+      // otherFee: {
+      //   amount: 12,
+      //   percent: '1.1%',
+      // },
       roadShowTitle: ['净佣金（万元）', '路演次数（次）', '路演效率（万元）'],
-      roadShow: {
-        '富国': [787.6, 350.0, 129, 60, 6.1, 5.8],
-        '天治': [516.5, 250.0, 132, 65, 3.9, 3.8],
-        '中银': [228.3, 130.0,  38, 20, 5.9, 6.5],
-        '富安达': [49.3, 20.0, 44, 22, 1.1, 0.9],
-      },
-      marketShareData: {
-        '富国': [
-          ['3.00', '2.55', '2.00', '毛佣金市占率'],
-          ['2.47', '1.98', '2.00', '净佣金市占率']
-        ],
-        '中银': [
-          ['6.80', '5.99', '6.00', '毛佣金市占率'],
-          ['6.42', '5.14', '5.00', '净佣金市占率']
-        ],
-        '天治': [
-          ['14.00', '12.00', '10.00', '毛佣金市占率'],
-          ['12.1', '8.02', '7.00', '净佣金市占率']
-        ],
-        '富安达': [
-          ['6.5', '6.4', '5.0', '毛佣金市占率'],
-          ['4.5', '2.8', '3.2', '净佣金市占率'],
-        ],
-      },
-      marketShareGoal: {
-        '富国': ['2.10', '94%'],
-        '中银': ['5.14', '94%'],
-        '天治': ['8.02', '100%'],
-        '富安达': ['3.03', '100%'],
-      },
+      // roadShow: {
+      //   '富国': [787.6, 350.0, 129, 60, 6.1, 5.8],
+      //   '天治': [516.5, 250.0, 132, 65, 3.9, 3.8],
+      //   '中银': [228.3, 130.0,  38, 20, 5.9, 6.5],
+      //   '富安达': [49.3, 20.0, 44, 22, 1.1, 0.9],
+      // },
+      // marketShareData: {
+      //   '富国': [
+      //     ['3.00', '2.55', '2.00', '毛佣金市占率'],
+      //     ['2.47', '1.98', '2.00', '净佣金市占率']
+      //   ],
+      //   '中银': [
+      //     ['6.80', '5.99', '6.00', '毛佣金市占率'],
+      //     ['6.42', '5.14', '5.00', '净佣金市占率']
+      //   ],
+      //   '天治': [
+      //     ['14.00', '12.00', '10.00', '毛佣金市占率'],
+      //     ['12.1', '8.02', '7.00', '净佣金市占率']
+      //   ],
+      //   '富安达': [
+      //     ['6.5', '6.4', '5.0', '毛佣金市占率'],
+      //     ['4.5', '2.8', '3.2', '净佣金市占率'],
+      //   ],
+      // },
+      // marketShareGoal: {
+      //   '富国': ['2.10', '94%'],
+      //   '中银': ['5.14', '94%'],
+      //   '天治': ['8.02', '100%'],
+      //   '富安达': ['3.03', '100%'],
+      // },
+      customers: [],
+      rank: [],
+      fee: [],
+      otherFee: {},
+      roadShow: {},
+      marketShareData: {},
+      marketShareGoal: {},
     }
   }
 
@@ -151,7 +158,7 @@ class SalesAnalysis extends Component {
       './API/userList.php' :
       'http://localhost:3000/getUserList'
 
-    const resp = fetch(`${urlGetUserList}?userId=${this.loginUser.userId}`, {
+    fetch(`${urlGetUserList}?userId=${this.loginUser.userId}`, {
       method: 'GET',
     }).then((resp) => {
       return resp.json()
@@ -160,9 +167,64 @@ class SalesAnalysis extends Component {
         userList: data,
       })
     })
+
+    const urlGetSalesInfo = process.env.NODE_ENV === 'production' ?
+      './getInfo.php' :
+      'http://localhost:3000/getSalesInfo'
+
+    fetch(`${urlGetSalesInfo}?userId=${this.loginUser.userId}`, {
+      method: 'GET',
+    }).then((resp) => {
+      return resp.json()
+    }).then((data) => {
+      console.log('sales', data)
+      const {
+        customers,
+        fee,
+        rank,
+        marketShareData,
+        otherFee,
+        roadShow,
+        marketShareGoal,
+      } = data
+      // const marketShareDataTest = {
+      //   '富国': [
+      //     ['3.00', '2.55', '2.00', '毛佣金市占率'],
+      //     ['2.47', '1.98', '2.00', '净佣金市占率']
+      //   ],
+      //   '中银': [
+      //     ['6.80', '5.99', '6.00', '毛佣金市占率'],
+      //     ['6.42', '5.14', '5.00', '净佣金市占率']
+      //   ],
+      //   '天治': [
+      //     ['14.00', '12.00', '10.00', '毛佣金市占率'],
+      //     ['12.1', '8.02', '7.00', '净佣金市占率']
+      //   ],
+      //   '富安达': [
+      //     ['6.5', '6.4', '5.0', '毛佣金市占率'],
+      //     ['4.5', '2.8', '3.2', '净佣金市占率'],
+      //   ],
+      // }
+      // const marketShareGoalTest = {
+      //   '富国': ['2.10', '94%'],
+      //   '中银': ['5.14', '94%'],
+      //   '天治': ['8.02', '100%'],
+      //   '富安达': ['3.03', '100%'],
+      // }
+      this.setState({
+        customers: customers || [],
+        fee: fee || {},
+        rank: rank || {},
+        marketShareData: marketShareData || {},
+        otherFee: otherFee || {},
+        roadShow: roadShow || {},
+        marketShareGoal: marketShareGoal || {},
+      })
+    })
   }
 
   render() {
+    // console.log('pickedUser', this.state.pickedUser)
     const { intl } = this.props
     const {
       pickedUser,
@@ -178,15 +240,17 @@ class SalesAnalysis extends Component {
       marketShareData,
       marketShareGoal,
     } = this.state
+    const showCharts = pickedUser[0] && pickedUser[0] === '1031'
+    // console.log('showCharts', showCharts)
     const year = (new Date()).getFullYear()
     const yearAxis = [year - 2, year - 1, year]
     const quarter = ['Q1', 'Q2', 'Q3', 'Q4']
-    const customersLen = customers.length
+    const customersLen = customers && customers.length || 0
     const marketShareDimCount = 4
-    const marketShareDim = 3
+    // const marketShareDim = 3
     const marketShareChartGap = 2
     const marketShareChartBaseLeft = 5
-    const marketShareChartBaseTop = 35
+    const marketShareChartBaseTop = 10
     const marketShareChartBaseBottom = 10
     const marketShareChartRows = Math.ceil(customersLen / marketShareDimCount)
     const marketShareChartGridWidth = (100 - marketShareChartBaseLeft - marketShareChartGap) / marketShareDimCount
@@ -222,6 +286,36 @@ class SalesAnalysis extends Component {
     const onUserPicked = (v) => {
       this.setState({
         pickedUser: v,
+      }, () => {
+        const urlGetSalesInfo = process.env.NODE_ENV === 'production' ?
+          './getInfo.php' :
+          'http://localhost:3000/getSalesInfo'
+
+        fetch(`${urlGetSalesInfo}?userId=${v[1]}`, {
+          method: 'GET',
+        }).then((resp) => {
+          return resp.json()
+        }).then((data) => {
+          console.log('sales', data)
+          const {
+            customers,
+            fee,
+            rank,
+            marketShareData,
+            otherFee,
+            roadShow,
+            marketShareGoal,
+          } = data
+          this.setState({
+            customers: customers || [],
+            fee: fee || {},
+            rank: rank || {},
+            marketShareData: marketShareData || {},
+            otherFee: otherFee || {},
+            roadShow: roadShow || {},
+            marketShareGoal: marketShareGoal || {},
+          })
+        })
       })
     }
 
@@ -243,7 +337,7 @@ class SalesAnalysis extends Component {
         },
       },
       grid: {
-        left: 100,
+        left: 120,
         top: 90,
       },
       legend: {
@@ -260,13 +354,13 @@ class SalesAnalysis extends Component {
         type: 'category',
         data: [...customers],
         axisLabel: {
-          fontSize: 25,
+          fontSize: 22,
         },
       },
       series: quarter.map((q, i) => ({
         name: `${year}${q}`,
         type: 'bar',
-        data: customers.map((k) => rank[k][i]),
+        data: customers && customers.map((k) => rank[k][i]) || [],
       })),
     }
 
@@ -311,7 +405,7 @@ class SalesAnalysis extends Component {
         name: v,
         stack: 'total',
         type: 'bar',
-        data: fee[v].map((d) => d.amount),
+        data: fee && fee[v] && fee[v].map((d) => d.amount) || [],
       })),
     }
 
@@ -358,11 +452,13 @@ class SalesAnalysis extends Component {
               + j * (marketShareChartGridWidth + marketShareChartGap)
               + '%',
             top: marketShareChartBaseTop
-              + i * (marketShareChartGridHeight + marketShareChartGap)
+              + i * (marketShareChartBaseTop + marketShareChartGridHeight + marketShareChartGap)
               + '%',
             width: marketShareChartGridWidth + '%',
             height: marketShareChartGridHeight + '%',
           })
+          console.log('index', index)
+          console.log(option.grid)
 
           option.xAxis.push({
             // splitNumber: 3,
@@ -414,7 +510,7 @@ class SalesAnalysis extends Component {
             symbolSize: 3,
             xAxisIndex: index,
             yAxisIndex: index,
-            data: marketShareData[customers[index]][0],
+            data: marketShareData[customers[index]] && marketShareData[customers[index]][0] || [],
             label: {
               normal: {
                 show: true,
@@ -430,7 +526,7 @@ class SalesAnalysis extends Component {
             symbolSize: 3,
             xAxisIndex: index,
             yAxisIndex: index,
-            data: marketShareData[customers[index]][1],
+            data: marketShareData[customers[index]] && marketShareData[customers[index]][1] || [],
             label: {
               normal: {
                 show: true,
@@ -446,17 +542,18 @@ class SalesAnalysis extends Component {
               j * (marketShareChartGridWidth + marketShareChartGap) +
               3 +
               '%',
-            top: 'top',
+            top: i * (marketShareChartBaseTop + marketShareChartGridHeight + marketShareChartGap) +
+              '%',
             subtext: `${intl.formatMessage({
               id: 'SalesAnalysis.netMarketGoal',
-            })}${marketShareGoal[customers[index]][0]}\n${intl.formatMessage({
+            })}${marketShareGoal[customers[index]] && marketShareGoal[customers[index]][0] || []}\n${intl.formatMessage({
               id: 'SalesAnalysis.netMarketComplete',
-            })}${marketShareGoal[customers[index]][1]}`,
+            })}${marketShareGoal[customers[index]] && marketShareGoal[customers[index]][1] || []}`,
           })
 
           // option.visualMap.seriesIndex.push(option.series.length - 1)
 
-          if (++index > customersLen) {
+          if (++index >= customersLen) {
             break
           }
         }
@@ -501,173 +598,177 @@ class SalesAnalysis extends Component {
               })}
             </Item>
           }
-        <BarEchart
-          className="chart"
-          style={{
-            height: `${(customers.length * 1.8) < 6 ? 6 : (customers.length * 1.8)}rem`,
-          }}
-          option={rankChartOption}
-        />
-        <BarEchart
-          className="chart"
-          style={{
-            height: '8rem',
-          }}
-          option={feeCompositionChartOption}
-        />
-        <div className="fee-detail">
-          <table>
-            <thead>
-              <tr>
-                <th className="title" rowSpan="2" />
+        <div style={{
+          display: showCharts ? 'block' : 'none',
+        }}>
+          <BarEchart
+            className="chart"
+            style={{
+              height: `${(customers.length * 1.8) < 6 ? 6 : (customers.length * 1.8)}rem`,
+            }}
+            option={rankChartOption}
+          />
+          <BarEchart
+            className="chart"
+            style={{
+              height: '8rem',
+            }}
+            option={feeCompositionChartOption}
+          />
+          <div className="fee-detail">
+            <table>
+              <thead>
+                <tr>
+                  <th className="title" rowSpan="2" />
+                  {
+                    customers.map((c, i) => (
+                      <th
+                        key={i}
+                        className="title"
+                        colSpan="2"
+                      >{ c }</th>
+                    ))
+                  }
+                </tr>
+                <tr>
+                  {
+                    customers.map((c, i) => (
+                      [
+                        <th
+                          key={`${i}0`}
+                          className="title"
+                        >
+                          {
+                            intl.formatMessage({
+                              id: 'SalesAnalysis.amount',
+                            })
+                          }
+                        </th>,
+                        <th
+                          key={`${i}1`}
+                          className="title"
+                        >
+                          {
+                            intl.formatMessage({
+                              id: 'SalesAnalysis.percent',
+                            })
+                          }
+                        </th>,
+                      ]
+                    ))
+                  }
+                </tr>
+              </thead>
+              <tbody>
                 {
-                  customers.map((c, i) => (
-                    <th
+                  feeTableVariety.map((key, i) => (
+                    <tr
                       key={i}
-                      className="title"
-                      colSpan="2"
-                    >{ c }</th>
+                      className={key === intl.formatMessage({
+                        id: 'SalesAnalysis.total',
+                      }) ? 'total' : ''}
+                    >
+                      <td className="title">{ key }</td>
+                      {
+                        fee && fee[key] && fee[key].map((item, k) => (
+                          [
+                            <td key={`${k}0`}>{ item.amount }</td>,
+                            <td key={`${k}1`}>{ item.percent }</td>,
+                          ]
+                        )) || []
+                      }
+                    </tr>
                   ))
                 }
-              </tr>
-              <tr>
+                <tr>
+                  <td className="title" colSpan={customers.length * 2}>
+                    {
+                      intl.formatMessage({
+                        id: 'SalesAnalysis.otherFee.amount',
+                      })
+                    }
+                  </td>
+                  <td>{ otherFee.amount }</td>
+                </tr>
+                <tr>
+                  <td className="title" colSpan={customers.length * 2}>
+                    {
+                      intl.formatMessage({
+                        id: 'SalesAnalysis.otherFee.percent',
+                      })
+                    }
+                  </td>
+                  <td>{ otherFee.percent }</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="road-show">
+            <header>
+              {
+                intl.formatMessage({
+                  id: 'SalesAnalysis.roadShow',
+                })
+              }
+            </header>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  {
+                    roadShowTitle.map((t, i) => (
+                      <th key={i} colSpan="2">{ t }</th>
+                    ))
+                  }
+                </tr>
+                <tr>
+                  <th></th>
+                  {
+                    roadShowTitle.map((t, i) => (
+                      [
+                        <th key={`${i}0`}>
+                          {
+                            `${year-1}${intl.formatMessage({
+                              id: 'SalesAnalysis.otherFee.annual',
+                            })}`
+                          }
+                        </th>,
+                        <th key={`${i}1`}>
+                          {
+                            `${year}${intl.formatMessage({
+                              id: 'SalesAnalysis.otherFee.sofar',
+                            })}`
+                          }
+                        </th>,
+                      ]
+                    ))
+                  }
+                </tr>
+              </thead>
+              <tbody>
                 {
                   customers.map((c, i) => (
-                    [
-                      <th
-                        key={`${i}0`}
-                        className="title"
-                      >
-                        {
-                          intl.formatMessage({
-                            id: 'SalesAnalysis.amount',
-                          })
-                        }
-                      </th>,
-                      <th
-                        key={`${i}1`}
-                        className="title"
-                      >
-                        {
-                          intl.formatMessage({
-                            id: 'SalesAnalysis.percent',
-                          })
-                        }
-                      </th>,
-                    ]
+                    <tr key={i}>
+                      <td>{ c }</td>
+                      {
+                        roadShow[c] && roadShow[c].map((n, k) => (
+                          <td key={`${i}${k}`}>{ n }</td>
+                        )) || []
+                      }
+                    </tr>
                   ))
                 }
-              </tr>
-            </thead>
-            <tbody>
-              {
-                feeTableVariety.map((key, i) => (
-                  <tr
-                    key={i}
-                    className={key === intl.formatMessage({
-                      id: 'SalesAnalysis.total',
-                    }) ? 'total' : ''}
-                  >
-                    <td className="title">{ key }</td>
-                    {
-                      fee[key].map((item, k) => (
-                        [
-                          <td key={`${k}0`}>{ item.amount }</td>,
-                          <td key={`${k}1`}>{ item.percent }</td>,
-                        ]
-                      ))
-                    }
-                  </tr>
-                ))
-              }
-              <tr>
-                <td className="title" colSpan={customers.length * 2}>
-                  {
-                    intl.formatMessage({
-                      id: 'SalesAnalysis.otherFee.amount',
-                    })
-                  }
-                </td>
-                <td>{ otherFee.amount }</td>
-              </tr>
-              <tr>
-                <td className="title" colSpan={customers.length * 2}>
-                  {
-                    intl.formatMessage({
-                      id: 'SalesAnalysis.otherFee.percent',
-                    })
-                  }
-                </td>
-                <td>{ otherFee.percent }</td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+          <ParallelEchart
+            option={marketShareOption}
+            style={{
+              marginBottom: '20px',
+              height: '800px',
+            }}
+          />
         </div>
-        <div className="road-show">
-          <header>
-            {
-              intl.formatMessage({
-                id: 'SalesAnalysis.roadShow',
-              })
-            }
-          </header>
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                {
-                  roadShowTitle.map((t, i) => (
-                    <th key={i} colSpan="2">{ t }</th>
-                  ))
-                }
-              </tr>
-              <tr>
-                <th></th>
-                {
-                  roadShowTitle.map((t, i) => (
-                    [
-                      <th key={`${i}0`}>
-                        {
-                          `${year-1}${intl.formatMessage({
-                            id: 'SalesAnalysis.otherFee.annual',
-                          })}`
-                        }
-                      </th>,
-                      <th key={`${i}1`}>
-                        {
-                          `${year}${intl.formatMessage({
-                            id: 'SalesAnalysis.otherFee.sofar',
-                          })}`
-                        }
-                      </th>,
-                    ]
-                  ))
-                }
-              </tr>
-            </thead>
-            <tbody>
-              {
-                customers.map((c, i) => (
-                  <tr key={i}>
-                    <td>{ c }</td>
-                    {
-                      roadShow[c].map((n, k) => (
-                        <td key={`${i}${k}`}>{ n }</td>
-                      ))
-                    }
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
-        <ParallelEchart
-          option={marketShareOption}
-          style={{
-            marginBottom: '20px',
-            height: `${marketShareChartRows * 3 + 2}rem`,
-          }}
-        />
       </div>
     )
   }
