@@ -252,7 +252,7 @@ class SalesAnalysis extends Component {
     const yearAxis = [year - 2, year - 1, year]
     const quarter = ['Q1', 'Q2', 'Q3', 'Q4']
     const customersLen = customers && customers.length || 0
-    const marketShareDimCount = 4
+    const marketShareDimCount = 6
     // const marketShareDim = 3
     const marketShareChartGap = 2
     const marketShareChartBaseLeft = 5
@@ -790,7 +790,7 @@ class SalesAnalysis extends Component {
               style={{
                 marginBottom: '20px',
                 width: `${chartWidth}px`,
-                height: '800px',
+                height: '400px',
               }}
             />
             : null
