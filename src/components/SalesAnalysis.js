@@ -13,8 +13,10 @@ class SalesAnalysis extends Component {
     super(props)
 
     this.loginUser = props.loginUser
+    this.el = React.createRef()
 
     this.state = {
+      chartWidth: 0,
       pickedUser: [props.loginUser.groupId, props.loginUser.userId],
       userList: [],
       // customers: ['富国', '天治', '中银', '富安达'],
@@ -154,6 +156,7 @@ class SalesAnalysis extends Component {
   }
 
   componentDidMount() {
+    // console.dir(this.el)
     const urlGetUserList = process.env.NODE_ENV === 'production' ?
       './API/userList.php' :
       'http://localhost:3000/getUserList'
@@ -219,6 +222,7 @@ class SalesAnalysis extends Component {
         otherFee: otherFee || {},
         roadShow: roadShow || {},
         marketShareGoal: marketShareGoal || {},
+        chartWidth: this.el.current.clientWidth,
       })
     })
   }
@@ -239,9 +243,11 @@ class SalesAnalysis extends Component {
       roadShow,
       marketShareData,
       marketShareGoal,
+      chartWidth,
     } = this.state
     const showCharts = pickedUser[0] && pickedUser[0] === '1031'
     // console.log('showCharts', showCharts)
+    const legend = ['2017Q2', '2017Q3', '2017Q4', '2018Q1']
     const year = (new Date()).getFullYear()
     const yearAxis = [year - 2, year - 1, year]
     const quarter = ['Q1', 'Q2', 'Q3', 'Q4']
@@ -268,7 +274,7 @@ class SalesAnalysis extends Component {
       return max
     }, 0)
 
-    console.log('marketShareDataMax', marketShareDataMax)
+    // console.log('marketShareDataMax', marketShareDataMax)
 
     const userPickerData = userList.map((row) => {
       return {
@@ -314,6 +320,7 @@ class SalesAnalysis extends Component {
             otherFee: otherFee || {},
             roadShow: roadShow || {},
             marketShareGoal: marketShareGoal || {},
+            chartWidth: this.el.current.clientWidth,
           })
         })
       })
@@ -341,7 +348,8 @@ class SalesAnalysis extends Component {
         top: 90,
       },
       legend: {
-        data: quarter.map((q) => `${year}${q}`),
+        // data: quarter.map((q) => `${year}${q}`),
+        data: legend,
         bottom: 0,
         textStyle: {
           fontSize: 20,
@@ -357,8 +365,13 @@ class SalesAnalysis extends Component {
           fontSize: 22,
         },
       },
-      series: quarter.map((q, i) => ({
-        name: `${year}${q}`,
+      // series: quarter.map((q, i) => ({
+      //   name: `${year}${q}`,
+      //   type: 'bar',
+      //   data: customers && customers.map((k) => rank[k][i]) || [],
+      // })),
+      series: legend.map((q, i) => ({
+        name: q,
         type: 'bar',
         data: customers && customers.map((k) => rank[k][i]) || [],
       })),
@@ -457,8 +470,8 @@ class SalesAnalysis extends Component {
             width: marketShareChartGridWidth + '%',
             height: marketShareChartGridHeight + '%',
           })
-          console.log('index', index)
-          console.log(option.grid)
+          // console.log('index', index)
+          // console.log(option.grid)
 
           option.xAxis.push({
             // splitNumber: 3,
@@ -561,9 +574,10 @@ class SalesAnalysis extends Component {
     }
 
     generateMarketShareGrids(marketShareOption)
+    console.log('chartWidth', chartWidth)
 
     return (
-      <div className="sales-analysis">
+      <div className="sales-analysis" ref={this.el}>
         {
           userList.length ?
             <Picker
@@ -579,9 +593,9 @@ class SalesAnalysis extends Component {
                 return v[1]
               }}
               cols={2}
-              onChange={(v) => {
-                onUserPicked(v)
-              }}
+              // onChange={(v) => {
+              //   onUserPicked(v)
+              // }}
               onOk={(v) => {
                 onUserPicked(v)
               }}
@@ -601,20 +615,28 @@ class SalesAnalysis extends Component {
         <div style={{
           display: showCharts ? 'block' : 'none',
         }}>
-          <BarEchart
-            className="chart"
-            style={{
-              height: `${(customers.length * 1.8) < 6 ? 6 : (customers.length * 1.8)}rem`,
-            }}
-            option={rankChartOption}
-          />
-          <BarEchart
-            className="chart"
-            style={{
-              height: '8rem',
-            }}
-            option={feeCompositionChartOption}
-          />
+          {
+            chartWidth ?
+              [<BarEchart
+                key={0}
+                className="chart"
+                style={{
+                  width: `${chartWidth}px`,
+                  height: `${(customers.length * 1.8) < 6 ? 6 : (customers.length * 1.8)}rem`,
+                }}
+                option={rankChartOption}
+              />,
+              <BarEchart
+                key={1}
+                className="chart"
+                style={{
+                  width: `${chartWidth}px`,
+                  height: '8rem',
+                }}
+                option={feeCompositionChartOption}
+              />]
+            : null
+          }
           <div className="fee-detail">
             <table>
               <thead>
@@ -761,13 +783,18 @@ class SalesAnalysis extends Component {
               </tbody>
             </table>
           </div>
-          <ParallelEchart
-            option={marketShareOption}
-            style={{
-              marginBottom: '20px',
-              height: '800px',
-            }}
-          />
+          {
+            chartWidth ?
+            <ParallelEchart
+              option={marketShareOption}
+              style={{
+                marginBottom: '20px',
+                width: `${chartWidth}px`,
+                height: '800px',
+              }}
+            />
+            : null
+          }
         </div>
       </div>
     )
