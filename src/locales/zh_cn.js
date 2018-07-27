@@ -94,7 +94,7 @@ module.exports = {
   'SalesAnalysis.percent': '占比',
   'SalesAnalysis.total': '合计',
   'SalesAnalysis.roadShow': '路演效率',
-  'SalesAnalysis.otherFee.amount': '扣除以上费用后，招待费及其他',
+  'SalesAnalysis.otherFee.amount': '个人所有账户招待费及其他',
   'SalesAnalysis.otherFee.percent': '占净佣金比例',
   'SalesAnalysis.otherFee.annual': '全年',
   'SalesAnalysis.otherFee.sofar': '至今',

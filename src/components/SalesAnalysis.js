@@ -27,8 +27,8 @@ class SalesAnalysis extends Component {
       //   '中银': [6, 3, 11, 2],
       //   '富安达': [4, 8, 3, 1],
       // },
-      feeVariety: ['代销费用', '代付费用', '专家费', '剩余毛佣金'],
-      feeTableVariety: ['毛佣金', '专家费', '代付费用', '代销费用', '合计', '剩余毛佣金'],
+      feeVariety: ['代销费用', '代付费用', '专家费', '净佣金'],
+      feeTableVariety: ['毛佣金', '专家费', '代付费用', '代销费用', '合计', '净佣金'],
       // fee: {
       //   // '富国', '天治', '中银', '富安达'
       //   '代销费用': [{
@@ -70,7 +70,7 @@ class SalesAnalysis extends Component {
       //     amount: 0,
       //     percent: '0.0%',
       //   }], // 专家费
-      //   '剩余毛佣金': [{
+      //   '净佣金': [{
       //     amount: 699,
       //     percent: '',
       //   }, {
@@ -82,7 +82,7 @@ class SalesAnalysis extends Component {
       //   }, {
       //     amount: 205,
       //     percent: '',
-      //   }], // 剩余毛佣金
+      //   }], // 净佣金
       //   '毛佣金': [{
       //     amount: 1016,
       //     percent: '',
@@ -256,7 +256,7 @@ class SalesAnalysis extends Component {
     // const marketShareDim = 3
     const marketShareChartGap = 2
     const marketShareChartBaseLeft = 5
-    const marketShareChartBaseTop = 10
+    const marketShareChartBaseTop = 20
     const marketShareChartBaseBottom = 10
     const marketShareChartRows = Math.ceil(customersLen / marketShareDimCount)
     const marketShareChartGridWidth = (100 - marketShareChartBaseLeft - marketShareChartGap) / marketShareDimCount
@@ -690,7 +690,10 @@ class SalesAnalysis extends Component {
                         id: 'SalesAnalysis.total',
                       }) ? 'total' : ''}
                     >
-                      <td className="title">{ key }</td>
+                      <td className={key === '毛佣金' || key === '净佣金' ?
+                        'title t-l' : 'title t-r' }>
+                        { key === '专家费' ? '其中: 专家费' : key }
+                      </td>
                       {
                         fee && fee[key] && fee[key].map((item, k) => (
                           [
@@ -790,7 +793,7 @@ class SalesAnalysis extends Component {
               style={{
                 marginBottom: '20px',
                 width: `${chartWidth}px`,
-                height: '400px',
+                height: '350px',
               }}
             />
             : null
