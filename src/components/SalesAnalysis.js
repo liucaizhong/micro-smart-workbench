@@ -247,7 +247,7 @@ class SalesAnalysis extends Component {
     } = this.state
     const showCharts = pickedUser[0] && pickedUser[0] === '1031'
     // console.log('showCharts', showCharts)
-    const legend = ['2017Q2', '2017Q3', '2017Q4', '2018Q1']
+    const legend = ['2017Q3', '2017Q4', '2018Q1', '2018Q2']
     const year = (new Date()).getFullYear()
     const yearAxis = [year - 2, year - 1, year]
     const quarter = ['Q1', 'Q2', 'Q3', 'Q4']
@@ -337,12 +337,12 @@ class SalesAnalysis extends Component {
           fontSize: 35,
         },
       },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow',
-        },
-      },
+      // tooltip: {
+      //   trigger: 'axis',
+      //   axisPointer: {
+      //     type: 'shadow',
+      //   },
+      // },
       grid: {
         left: 120,
         top: 90,
@@ -373,14 +373,14 @@ class SalesAnalysis extends Component {
       series: legend.map((q, i) => ({
         name: q,
         type: 'bar',
-        data: customers && customers.map((k) => rank[k][i]) || [],
+        data: customers && customers.map((k) => (1 / rank[k][i])) || [],
         label: {
           normal: {
             show: true,
             position: 'right',
             formatter: (params) => {
               // console.log(params.value)
-              return params.value ? `第${Math.ceil(1 / params.value)}名` : '暂无排名'
+              return params.value ? `第${Math.round(1 / params.value)}名` : '暂无排名'
             },
           },
         },
