@@ -374,6 +374,16 @@ class SalesAnalysis extends Component {
         name: q,
         type: 'bar',
         data: customers && customers.map((k) => rank[k][i]) || [],
+        label: {
+          normal: {
+            show: true,
+            position: 'right',
+            formatter: (params) => {
+              // console.log(params.value)
+              return params.value ? `第${Math.ceil(1 / params.value)}名` : '暂无排名'
+            },
+          },
+        },
       })),
     }
 
