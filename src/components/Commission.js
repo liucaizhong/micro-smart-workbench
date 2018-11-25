@@ -7,6 +7,7 @@ import moment from 'moment'
 import Table from 'rc-table'
 import 'rc-table/assets/index.css'
 import Icon from './CustomIcon'
+import LineEchart from './LineEchart'
 
 const Item = List.Item
 
@@ -49,6 +50,7 @@ class Commission extends Component {
       commissions: [],
       totalAmount: 0,
       showCommission: false,
+      historicalPoints: null,
     }
   }
 
@@ -190,9 +192,33 @@ class Commission extends Component {
       }) : Promise.resolve()
     }
 
+    const getHistoricalPoints = () => {
+      const urlGetHistoricalPoints = process.env.NODE_ENV === 'production'
+                  ? './API/getPaidianHis.php'
+                  : 'http://localhost:3000/getHistoricalPoints'
+
+      return pageId === 1
+      ? fetch(`${urlGetHistoricalPoints}?userId=${pickedUser[1]}`, {
+        method: 'GET',
+      })
+      .then((resp) => {
+        return resp.json()
+      })
+      .then((data) => {
+        console.log('historical points', data)
+        this.setState({
+          historicalPoints: data,
+        })
+        return Promise.resolve()
+      })
+      .catch((err) => {
+        return Promise.reject(err)
+      }) : Promise.resolve()
+    }
+
     // console.log('pageId', pageId)
     // console.log('getPointsOrCommissions', getPointsOrCommissions)
-    Promise.all([getPointsOrCommissions(), getFee(),
+    Promise.all([getPointsOrCommissions(), getFee(), getHistoricalPoints(),
       +this.loginUser.roleId === 0 && pageId === 2 ? getCommissionSummary() : () => {}])
     .then(() => {
       Toast.hide()
@@ -211,6 +237,7 @@ class Commission extends Component {
     const { intl, history, setCommissionCond } = this.props
     const { fee, points, userList, pickedDate, showCommission,
       pickedUser, pageId, commissions, ranking, total, totalAmount,
+      historicalPoints,
     } = this.state
 
     const showFee = !+this.loginUser.roleId
@@ -629,6 +656,95 @@ class Commission extends Component {
                 })}
               </Button>
             </div>
+          : null
+        }
+
+        {
+          pageId === 1
+          ? <Card
+            className="historical-point__card"
+          >
+            <Card.Header
+              title={intl.formatMessage({
+                id: 'Commission.historicalPoints',
+              })}
+            />
+            <Card.Body>
+              {
+                <LineEchart
+                  option={{
+                    tooltip: {
+                      trigger: 'axis',
+                    },
+                    grid: {
+                      left: 0,
+                      right: 0,
+                      top: 60,
+                      bottom: 60,
+                      containLabel: true,
+                    },
+                    legend: {
+                      top: 0,
+                      textStyle: {
+                        fontSize: '26',
+                      },
+                      data: [{
+                        name: intl.formatMessage({
+                          id: 'Commission.pointField1',
+                        }),
+                        icon: 'circle',
+                      }],
+                    },
+                    xAxis: {
+                      type: 'category',
+                      show: true,
+                      axisTick: {
+                        show: false,
+                      },
+                      data: (historicalPoints && historicalPoints.xData) || [],
+                      axisLabel: {
+                        fontSize: '20',
+                        color: '#888',
+                        interval: 0,
+                        fontStyle: 'oblique',
+                        rotate: 30,
+                        margin: 12,
+                        showMinLabel: true,
+                        showMaxLabel: true,
+                      },
+                    },
+                    yAxis: [{
+                      // max: 'dataMax',
+                      type: 'value',
+                      splitNumber: 3,
+                      scale: true,
+                      axisTick: {
+                        show: false,
+                      },
+                      axisLine: {
+                        show: false,
+                      },
+                      axisLabel: {
+                        fontSize: '24',
+                        align: 'right',
+                        color: '#888',
+                      },
+                    }],
+                    series: [
+                      {
+                        name: intl.formatMessage({
+                          id: 'Commission.pointField1',
+                        }),
+                        type: 'line',
+                        data: (historicalPoints && historicalPoints.yData) || [],
+                      },
+                    ],
+                    color: ['#0D9FBC', '#373030'],
+                  }}
+                />
+              }
+            </Card.Body>
+          </Card>
           : null
         }
       </div>

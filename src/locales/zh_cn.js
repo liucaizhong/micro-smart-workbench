@@ -20,6 +20,7 @@ module.exports = {
   'Commission.totalAmount2': '净佣金',
   'Commission.totalAmount3': '税后净佣金',
   'Commission.totalAmount4': '税后非佣金收入',
+  'Commission.historicalPoints': '历史派点',
   'Common.year': '年',
   'Common.quarter': '第{num}季度',
   'Common.month': '{num}月',

@@ -5,10 +5,10 @@ import { getCookie } from '../util'
 
 // get login info
 function* setUser() {
-  const userId = getCookie('userId') || 'zhanghuina'
+  const userId = getCookie('userId') || 'jiangchenlong'
   const userName = getCookie('userName') || ''
   // 0: admin, 1: analyst, 2: sales
-  const roleId = getCookie('roleId') || 2
+  const roleId = getCookie('roleId') || 1
   const groupId = getCookie('groupId')
 
   yield put({
